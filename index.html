@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patitas SCZ — Red de Rescate, Adopción y Apoyo Animal</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
 </head>
 <body>
+
+  <!-- BARRA DE PROGRESO DE LECTURA -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
 
   <!-- BARRA DE NAVEGACIÓN -->
   <header class="navbar">
@@ -21,9 +25,9 @@
       <nav class="nav-menu" id="nav-menu">
         <ul class="nav-list">
           <li><a href="index.html" class="nav-link active">Inicio</a></li>
-          <li><a href="casos.html" class="nav-link" target="_blank" rel="noopener">Casos y Mascotas</a></li>
-          <li><a href="refugios.html" class="nav-link" target="_blank" rel="noopener">Refugios y Campañas</a></li>
-          <li><a href="publicar.html" class="nav-link" target="_blank" rel="noopener">Publicar Caso</a></li>
+          <li><a href="casos.html" class="nav-link">Casos y Mascotas</a></li>
+          <li><a href="refugios.html" class="nav-link">Refugios y Campañas</a></li>
+          <li><a href="publicar.html" class="nav-link">Publicar Caso</a></li>
           <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
         </ul>
       </nav>
@@ -31,7 +35,7 @@
   </header>
 
   <main>
-    <!-- HERO / PORTADA CON ANIMACIONES DE HUELLAS -->
+    <!-- HERO / PORTADA -->
     <section class="hero">
       <div class="floating-paws-bg" aria-hidden="true">
         <span class="fpaw p1">🐾</span>
@@ -42,34 +46,34 @@
       </div>
 
       <div class="container hero-grid">
-        <div class="hero-content">
+        <div class="hero-content reveal-item">
           <span class="hero-badge">📍 Toda Santa Cruz • Red Solidaria Animal</span>
           <h1>Conectamos corazones para rescatar, sanar y dar hogar</h1>
           <p class="hero-lead">
             Centralizamos rescates urgentes, mascotas perdidas, adopciones responsables y campañas veterinarias en toda Santa Cruz para transformar la intención de ayudar en acción real.
           </p>
           <div class="hero-actions">
-            <a href="publicar.html" class="btn btn-primary" target="_blank" rel="noopener">🐾 Publicar Caso o Rescate</a>
-            <a href="casos.html" class="btn btn-secondary" target="_blank" rel="noopener">Ver Casos Activos</a>
+            <a href="publicar.html" class="btn btn-primary btn-shine">🐾 Publicar Caso o Rescate</a>
+            <a href="casos.html" class="btn btn-secondary">Ver Casos Activos</a>
           </div>
 
           <div class="hero-stats">
             <div class="stat-item">
-              <strong id="stat-total">6</strong>
+              <strong id="stat-total" data-target="6">0</strong>
               <span>Casos verificados</span>
             </div>
             <div class="stat-item">
-              <strong id="stat-urgentes">5</strong>
+              <strong id="stat-urgentes" data-target="5">0</strong>
               <span>Necesitan apoyo hoy</span>
             </div>
             <div class="stat-item">
-              <strong id="stat-resueltos">1</strong>
+              <strong id="stat-resueltos" data-target="1">0</strong>
               <span>Finales felices</span>
             </div>
           </div>
         </div>
 
-        <div class="hero-visual">
+        <div class="hero-visual reveal-item">
           <img 
             src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1000&q=80" 
             alt="Mascotas rescatadas en Santa Cruz" 
@@ -86,10 +90,10 @@
       </div>
     </section>
 
-    <!-- BIENVENIDA E INTRODUCCIÓN: ¿QUIÉNES SOMOS Y CÓMO SOLUCIONAMOS? -->
+    <!-- BIENVENIDA E INTRODUCCIÓN -->
     <section id="como-funcionamos" class="section">
       <div class="container">
-        <div class="section-header text-center">
+        <div class="section-header text-center reveal-item">
           <span class="section-tag">Nuestro Propósito</span>
           <h2>¿Quiénes somos y cómo logramos soluciones reales?</h2>
           <p>
@@ -98,7 +102,7 @@
         </div>
 
         <div class="cycle-grid">
-          <article class="cycle-card">
+          <article class="cycle-card reveal-item" style="transition-delay: 0.08s;">
             <div class="cycle-step">01</div>
             <h3>Publicación Moderada y Segura</h3>
             <p>
@@ -106,7 +110,7 @@
             </p>
           </article>
 
-          <article class="cycle-card">
+          <article class="cycle-card reveal-item" style="transition-delay: 0.18s;">
             <div class="cycle-step">02</div>
             <h3>Conexión Inmediata por WhatsApp</h3>
             <p>
@@ -114,7 +118,7 @@
             </p>
           </article>
 
-          <article class="cycle-card">
+          <article class="cycle-card reveal-item" style="transition-delay: 0.28s;">
             <div class="cycle-step">03</div>
             <h3>Refugios y Campañas Verificadas</h3>
             <p>
@@ -128,12 +132,12 @@
     <!-- VISTA PREVIA DE CASOS URGENTES -->
     <section class="section bg-light">
       <div class="container">
-        <div class="section-header-flex">
+        <div class="section-header-flex reveal-item">
           <div>
             <span class="section-tag">Urgencias del Día</span>
             <h2>Casos aprobados que buscan apoyo ahora</h2>
           </div>
-          <a href="casos.html" class="btn btn-secondary" target="_blank" rel="noopener">Explorar todos los casos →</a>
+          <a href="casos.html" class="btn btn-secondary">Explorar todos los casos →</a>
         </div>
 
         <div class="cards-grid" id="contenedor-destacados">
@@ -145,7 +149,7 @@
     <!-- FORMULARIO DE CONTACTO CIUDADANO / ALIANZAS -->
     <section id="contacto" class="section">
       <div class="container form-section-grid">
-        <div class="form-info">
+        <div class="form-info reveal-item">
           <span class="section-tag">Súmate a la Red</span>
           <h2>¿Tienes un refugio, clínica veterinaria o quieres ser voluntario?</h2>
           <p>
@@ -158,7 +162,7 @@
           </ul>
         </div>
 
-        <form class="report-form" id="form-contacto" novalidate>
+        <form class="report-form reveal-item" id="form-contacto" novalidate>
           <h3>Formulario de Contacto</h3>
 
           <div class="form-row">
@@ -192,11 +196,27 @@
           <p class="form-error" id="contacto-error" hidden>⚠️ Por favor completa todos los campos con un correo o número de teléfono válido.</p>
           <div class="contact-success" id="contacto-exito" hidden></div>
 
-          <button type="submit" class="btn btn-primary btn-block">✉️ Enviar Mensaje</button>
+          <button type="submit" class="btn btn-primary btn-block btn-shine">✉️ Enviar Mensaje</button>
         </form>
       </div>
     </section>
   </main>
+
+  <!-- PERRITO CAMINANDO POR TODA LA PANTALLA (Cute Doggie.json) -->
+  <div class="walking-dog-track" id="walking-dog-container" title="¡Haz clic para saludar!">
+    <div class="walking-dog-bubble" id="walking-dog-bubble">¡Guau! ¿Ayudamos hoy? 🐾</div>
+    <div class="walking-dog-sprite" id="walking-dog-sprite">
+      <lottie-player
+        id="lottie-walking-dog"
+        src="Cute%20Doggie.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay>
+      </lottie-player>
+    </div>
+    <button type="button" class="btn-pause-dog" id="btn-pause-dog" aria-label="Pausar o reanudar mascota" title="Pausar/Reanudar recorrido">⏸</button>
+  </div>
 
   <!-- PIE DE PÁGINA -->
   <footer class="footer">

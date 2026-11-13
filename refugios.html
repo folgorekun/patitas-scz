@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Refugios y Campañas — Patitas SCZ</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
 </head>
 <body>
+
+  <!-- BARRA DE PROGRESO DE LECTURA -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
 
   <!-- BARRA DE NAVEGACIÓN -->
   <header class="navbar">
@@ -20,11 +24,11 @@
 
       <nav class="nav-menu" id="nav-menu">
         <ul class="nav-list">
-          <li><a href="index.html" class="nav-link" target="_blank" rel="noopener">Inicio</a></li>
-          <li><a href="casos.html" class="nav-link" target="_blank" rel="noopener">Casos y Mascotas</a></li>
+          <li><a href="index.html" class="nav-link">Inicio</a></li>
+          <li><a href="casos.html" class="nav-link">Casos y Mascotas</a></li>
           <li><a href="refugios.html" class="nav-link active">Refugios y Campañas</a></li>
-          <li><a href="publicar.html" class="nav-link" target="_blank" rel="noopener">Publicar Caso</a></li>
-          <li><a href="index.html#contacto" class="nav-link" target="_blank" rel="noopener">Contacto</a></li>
+          <li><a href="publicar.html" class="nav-link">Publicar Caso</a></li>
+          <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
         </ul>
       </nav>
     </div>
@@ -32,10 +36,23 @@
 
   <main>
     <section class="page-banner">
-      <div class="container">
-        <span class="section-tag">Directorio Solidario en Santa Cruz</span>
-        <h1>Refugios, Puntos de Acopio y Campañas Veterinarias</h1>
-        <p>Encuentra centros con sello verificado donde donar alimento, adoptar presencialmente o esterilizar a bajo costo.</p>
+      <div class="container banner-flex">
+        <div>
+          <span class="section-tag">Albergues, Acopio y Veterinarias Aliadas</span>
+          <h1>Refugios y Campañas Solidarias en Santa Cruz</h1>
+          <p>Encuentra puntos oficiales de donación, jornadas de vacunación y esterilización a bajo costo.</p>
+        </div>
+
+        <div class="banner-lottie-badge happy-dog-badge" aria-hidden="true">
+          <lottie-player
+            src="Happy%20Dog.json"
+            background="transparent"
+            speed="1"
+            style="width: 135px; height: 115px;"
+            loop
+            autoplay>
+          </lottie-player>
+        </div>
       </div>
     </section>
 
@@ -45,12 +62,13 @@
           <div class="filter-buttons" id="guias-filter-buttons">
             <button class="filter-btn active" data-tipo="todos">Todos los puntos</button>
             <button class="filter-btn" data-tipo="refugios">🏠 Refugios y Acopio</button>
-            <button class="filter-btn" data-tipo="campanas">🩺 Campañas Veterinarias</button>
+            <button class="filter-btn" data-tipo="campanas">💉 Campañas Veterinarias</button>
           </div>
+          <a href="index.html#contacto" class="btn btn-secondary">➕ Registrar Refugio o Campaña</a>
         </div>
 
         <div class="guides-grid" id="contenedor-guias">
-          <!-- Renderizado dinámico desde datos.json -->
+          <!-- Renderizado dinámico desde app.js -->
         </div>
       </div>
     </section>

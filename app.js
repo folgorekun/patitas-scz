@@ -1,5 +1,5 @@
 /* =========================================================
-   PATITAS SCZ — LÓGICA PRINCIPAL CON MODERACIÓN Y PIN
+   PATITAS SCZ — LÓGICA PRINCIPAL, MODERACIÓN Y ANIMACIONES
    ========================================================= */
 
    const STORAGE_KEY = 'patitas_scz_data_v1';
@@ -245,6 +245,9 @@
    document.addEventListener('DOMContentLoaded', async function() {
      await cargarDatos();
      inicializarMenuMovil();
+     inicializarBarraProgresoScroll();
+     inicializarAnimacionesScroll();
+     inicializarPerritoCaminante();
      actualizarEstadisticasPortada();
      renderizarDestacadosPortada();
      inicializarCasosPage();
@@ -286,7 +289,160 @@
    }
    
    /* =========================================================
-      2. NAVEGACIÓN MÓVIL
+      2. ANIMACIONES GLOBALES Y PERRITO CAMINANDO POR LA PANTALLA
+      ========================================================= */
+   function inicializarBarraProgresoScroll() {
+     const bar = document.getElementById('scroll-progress');
+     if (!bar) return;
+   
+     window.addEventListener('scroll', function() {
+       const scrollTop = window.scrollY || document.documentElement.scrollTop;
+       const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+       const porcentaje = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+       bar.style.width = porcentaje + '%';
+     });
+   }
+   
+   function inicializarAnimacionesScroll() {
+     const elementos = document.querySelectorAll('.reveal-item');
+     if (!elementos.length || !('IntersectionObserver' in window)) return;
+   
+     document.body.classList.add('js-scroll-ready');
+   
+     const observador = new IntersectionObserver(function(entries, obs) {
+       entries.forEach(function(entry) {
+         if (entry.isIntersecting) {
+           entry.target.classList.add('is-visible');
+           obs.unobserve(entry.target);
+         }
+       });
+     }, { threshold: 0.12 });
+   
+     elementos.forEach(function(el) {
+       observador.observe(el);
+     });
+   }
+   
+   function inicializarPerritoCaminante() {
+     const container = document.getElementById('walking-dog-container');
+     const sprite = document.getElementById('walking-dog-sprite');
+     const bubble = document.getElementById('walking-dog-bubble');
+     const btnPause = document.getElementById('btn-pause-dog');
+     const player = document.getElementById('lottie-walking-dog');
+   
+     if (!container || !sprite) return;
+   
+     let posX = 16;
+     let direccion = 1; // 1 = camina hacia la derecha, -1 = camina hacia la izquierda
+     let pausado = false;
+     let saludoTimeout = null;
+   
+     const frases = [
+       '¡Guau! ¿Ayudamos hoy? 🐾',
+       '¡Adopta, no compres! 💚',
+       '¡Hay patitas buscando hogar! 🏡',
+       '¡Gracias por apoyar en SCZ! 🐶'
+     ];
+     let indiceFrase = 0;
+   
+     // En Cute Doggie.json el dibujo mira hacia la izquierda por defecto:
+     // scaleX(-1) hace que mire hacia la derecha; scaleX(1) hacia la izquierda.
+     function actualizarOrientacion() {
+       sprite.style.transform = direccion === 1 ? 'scaleX(-1)' : 'scaleX(1)';
+     }
+   
+     actualizarOrientacion();
+   
+     function animarPaso() {
+       if (!pausado) {
+         const anchoPantalla = window.innerWidth;
+         const anchoPerro = container.offsetWidth || 175;
+         // Deja espacio a la derecha para no chocar con el botón flotante del chatbot
+         const limiteDerecho = Math.max(40, anchoPantalla - anchoPerro - 85);
+         const limiteIzquierdo = 12;
+         const velocidad = anchoPantalla < 640 ? 1.1 : 1.55;
+   
+         posX += velocidad * direccion;
+   
+         if (posX >= limiteDerecho) {
+           posX = limiteDerecho;
+           direccion = -1;
+           actualizarOrientacion();
+         } else if (posX <= limiteIzquierdo) {
+           posX = limiteIzquierdo;
+           direccion = 1;
+           actualizarOrientacion();
+         }
+   
+         container.style.transform = `translateX(${posX}px)`;
+       }
+   
+       requestAnimationFrame(animarPaso);
+     }
+   
+     requestAnimationFrame(animarPaso);
+   
+     // Interacción al hacer clic o tocar al perrito
+     container.addEventListener('click', function(e) {
+       if (e.target === btnPause) return;
+   
+       indiceFrase = (indiceFrase + 1) % frases.length;
+       if (bubble) bubble.textContent = frases[indiceFrase];
+   
+       container.classList.add('show-bubble');
+       clearTimeout(saludoTimeout);
+       saludoTimeout = setTimeout(function() {
+         container.classList.remove('show-bubble');
+       }, 2600);
+     });
+   
+     // Botón discreto para pausar / reanudar su recorrido
+     if (btnPause) {
+       btnPause.addEventListener('click', function(e) {
+         e.stopPropagation();
+         pausado = !pausado;
+         container.classList.toggle('is-paused', pausado);
+         btnPause.textContent = pausado ? '▶' : '⏸';
+         if (player) {
+           if (pausado && typeof player.pause === 'function') player.pause();
+           if (!pausado && typeof player.play === 'function') player.play();
+         }
+       });
+     }
+   }
+   
+   function animarContador(elemento, valorFinal) {
+     if (!elemento) return;
+     let actual = 0;
+     const duracion = 850;
+     const pasos = 24;
+     const incremento = Math.max(1, Math.ceil(valorFinal / pasos));
+     const intervalo = Math.floor(duracion / pasos);
+   
+     const timer = setInterval(function() {
+       actual += incremento;
+       if (actual >= valorFinal) {
+         elemento.textContent = valorFinal;
+         clearInterval(timer);
+       } else {
+         elemento.textContent = actual;
+       }
+     }, intervalo);
+   }
+   
+   function lanzarConfetiCelebracion() {
+     if (typeof confetti === 'function') {
+       confetti({
+         particleCount: 75,
+         spread: 65,
+         origin: { y: 0.65 },
+         colors: ['#0d9488', '#f59e0b', '#10b981', '#ffffff']
+       });
+     }
+   }
+   
+   /* =========================================================
+      3. NAVEGACIÓN MÓVIL
       ========================================================= */
    function inicializarMenuMovil() {
      const toggle = document.getElementById('nav-toggle');
@@ -299,7 +455,7 @@
    }
    
    /* =========================================================
-      3. PORTADA: ESTADÍSTICAS Y CASOS DESTACADOS
+      4. PORTADA: ESTADÍSTICAS Y CASOS DESTACADOS
       ========================================================= */
    function actualizarEstadisticasPortada() {
      const totalEl = document.getElementById('stat-total');
@@ -313,9 +469,9 @@
      const resueltos = aprobados.filter(function(r) { return esCasoFinalizado(r.estado); }).length;
      const activos = total - resueltos;
    
-     totalEl.textContent = total;
-     urgentesEl.textContent = activos;
-     resueltosEl.textContent = resueltos;
+     animarContador(totalEl, total);
+     animarContador(urgentesEl, activos);
+     animarContador(resueltosEl, resueltos);
    }
    
    function renderizarDestacadosPortada() {
@@ -329,7 +485,7 @@
        .map(function(item, index) {
          const finalizado = esCasoFinalizado(item.estado);
          return `
-         <article class="report-card" style="animation-delay: ${index * 0.08}s">
+         <article class="report-card" style="animation-delay: ${index * 0.1}s">
            <div class="card-img-box">
              <img src="${item.imagen}" alt="${item.titulo}" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';">
              <span class="badge-urgencia urg-${item.urgencia}">${item.urgencia}</span>
@@ -347,7 +503,7 @@
                <span class="status-tag ${finalizado ? 'is-resolved' : ''}">
                  ${finalizado ? '✔' : '🐾'} ${item.estado} • 🤝 ${item.apoyos}
                </span>
-               <a href="casos.html" class="btn-detail" target="_blank" rel="noopener">Ver en red →</a>
+               <a href="casos.html" class="btn-detail">Ver en red →</a>
              </div>
            </div>
          </article>
@@ -357,7 +513,7 @@
    }
    
    /* =========================================================
-      4. PÁGINA CASOS Y MASCOTAS (MODERACIÓN + PIN + WHATSAPP + CRUD)
+      5. PÁGINA CASOS Y MASCOTAS (MODERACIÓN + PIN + WHATSAPP + CRUD)
       ========================================================= */
    function inicializarCasosPage() {
      const contenedor = document.getElementById('contenedor-reportes');
@@ -457,7 +613,6 @@
        }
      });
    
-     // Aprobar publicación pendiente (Solo Moderador)
      document.getElementById('btn-aprobar-modal').addEventListener('click', function() {
        const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
        if (caso && esModeradorActivo()) {
@@ -469,7 +624,6 @@
        }
      });
    
-     // Otorgar o quitar sello Verificado internamente (Solo Moderador)
      document.getElementById('btn-verificar-modal').addEventListener('click', function() {
        const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
        if (caso && esModeradorActivo()) {
@@ -522,6 +676,7 @@
    
        guardarColeccionEnLocal();
        document.getElementById('modal-cierre-box').hidden = true;
+       lanzarConfetiCelebracion();
        renderizarCasos();
        abrirModalDetalle(caso.id);
      });
@@ -569,23 +724,24 @@
    }
    
    function actualizarUIModerador() {
-    const btnMod = document.getElementById('btn-toggle-moderador');
-    const statusBar = document.getElementById('mod-status-bar');
-    if (!btnMod) return;
-  
-    const pendientesCount = reportesData.filter(function(r) { return r.aprobado === false; }).length;
-    const badgeHTML = pendientesCount > 0
-      ? `<span class="mod-count">${pendientesCount} pendiente${pendientesCount > 1 ? 's' : ''}</span>`
-      : '';
-  
-    if (esModeradorActivo()) {
-      if (statusBar) statusBar.hidden = false;
-      btnMod.innerHTML = `🛡️ Moderador Activo ${badgeHTML}`;
-    } else {
-      if (statusBar) statusBar.hidden = true;
-      btnMod.innerHTML = `🛡️ Modo Moderador ${badgeHTML}`;
-    }
-  }
+     const btnMod = document.getElementById('btn-toggle-moderador');
+     const statusBar = document.getElementById('mod-status-bar');
+     if (!btnMod) return;
+   
+     const pendientesCount = reportesData.filter(function(r) { return r.aprobado === false; }).length;
+     const badgeHTML = pendientesCount > 0
+       ? `<span class="mod-count">${pendientesCount} pendiente${pendientesCount > 1 ? 's' : ''}</span>`
+       : '';
+   
+     if (esModeradorActivo()) {
+       if (statusBar) statusBar.hidden = false;
+       btnMod.innerHTML = `🛡️ Moderador Activo ${badgeHTML}`;
+     } else {
+       if (statusBar) statusBar.hidden = true;
+       btnMod.innerHTML = `🛡️ Modo Moderador ${badgeHTML}`;
+     }
+   }
+   
    function solicitarVerificacionPin(accion) {
      accionPendientePin = accion;
      document.getElementById('modal-cierre-box').hidden = true;
@@ -678,7 +834,7 @@
          const pendiente = item.aprobado === false;
    
          return `
-         <article class="report-card ${pendiente ? 'is-pending-card' : ''}" style="animation-delay: ${index * 0.06}s">
+         <article class="report-card ${pendiente ? 'is-pending-card' : ''}" style="animation-delay: ${index * 0.07}s">
            <div class="card-img-box">
              <img src="${item.imagen}" alt="${item.titulo}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';">
              ${pendiente ? '<span class="badge-pending-overlay">⏳ Pendiente de revisión</span>' : ''}
@@ -778,7 +934,7 @@
    }
    
    /* =========================================================
-      5. DIRECTORIO DE REFUGIOS Y CAMPAÑAS (refugios.html)
+      6. DIRECTORIO DE REFUGIOS Y CAMPAÑAS (refugios.html)
       ========================================================= */
    function inicializarDirectorioPage() {
      const contenedor = document.getElementById('contenedor-guias');
@@ -822,7 +978,7 @@
    }
    
    /* =========================================================
-      6. FORMULARIO PUBLICAR CASO CON PIN DE AUTOR (publicar.html)
+      7. FORMULARIO PUBLICAR CASO CON PIN DE AUTOR (publicar.html)
       ========================================================= */
    function inicializarFormularioPublicar() {
      const form = document.getElementById('form-reporte');
@@ -906,7 +1062,7 @@
        reportesData.unshift(nuevoCaso);
        guardarColeccionEnLocal();
    
-       exitoEl.textContent = `✅ ¡Caso enviado a revisión! Activa el Modo Moderador (clave 2026) en "Casos y Mascotas" para aprobarlo y otorgar verificación si corresponde. Tu PIN de autor es ${pin}.`;
+       exitoEl.textContent = `✅ ¡Caso enviado a revisión! Activa el Modo Moderador (clave 2026) en "Casos y Mascotas" para aprobarlo. Tu PIN de autor es ${pin}.`;
        exitoEl.hidden = false;
        form.reset();
        previewBox.hidden = true;
@@ -918,7 +1074,7 @@
    }
    
    /* =========================================================
-      7. FORMULARIO DE CONTACTO / ALIANZAS (index.html)
+      8. FORMULARIO DE CONTACTO / ALIANZAS (index.html)
       ========================================================= */
    function inicializarFormularioContacto() {
      const formContacto = document.getElementById('form-contacto');
@@ -952,7 +1108,7 @@
    }
    
    /* =========================================================
-      8. VISOR JSON EN VIVO Y CHATBOT ASISTENTE
+      9. VISOR JSON EN VIVO Y CHATBOT ASISTENTE
       ========================================================= */
    function inicializarVisorJSON() {
      const btnVer = document.getElementById('btn-ver-json');
@@ -1013,7 +1169,7 @@
          <div class="chat-msg user">${op.pregunta}</div>
          <div class="chat-msg">
            ${op.respuesta}
-           <br><a href="${op.accionDestino}" target="_blank" rel="noopener" style="color:#0d9488; font-weight:700;">${op.accionTexto} →</a>
+           <br><a href="${op.accionDestino}" style="color:#0d9488; font-weight:700;">${op.accionTexto} →</a>
          </div>
        `;
        messages.scrollTop = messages.scrollHeight;
