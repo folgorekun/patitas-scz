@@ -1224,7 +1224,8 @@ ul {
 .global-paw {
   position: absolute;
   user-select: none;
-  animation: pawFloatMotion var(--dur, 9s) ease-in-out infinite alternate;
+  /* Reducimos la duración a la mitad para que se muevan más rápido sin tocar app.js */
+  animation: pawFloatMotion calc(var(--dur, 8s) * 0.5) ease-in-out infinite alternate;
   animation-delay: var(--delay, 0s);
 }
 
@@ -1234,13 +1235,14 @@ ul {
 
 @keyframes pawFloatMotion {
   0% {
-    transform: translateY(0px) rotate(var(--rot, -12deg)) scale(0.95);
+    transform: translate(0px, 0px) rotate(var(--rot, -12deg)) scale(0.92);
   }
   50% {
-    transform: translateY(-14px) rotate(calc(var(--rot, -12deg) + 12deg)) scale(1.05);
+    /* Mayor recorrido hacia arriba, a los lados y más giro */
+    transform: translate(18px, -28px) rotate(calc(var(--rot, -12deg) + 22deg)) scale(1.12);
   }
   100% {
-    transform: translateY(6px) rotate(calc(var(--rot, -12deg) - 8deg)) scale(0.98);
+    transform: translate(-14px, 16px) rotate(calc(var(--rot, -12deg) - 16deg)) scale(0.96);
   }
 }
 
