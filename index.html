@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patitas SCZ — Red de Rescate, Adopción y Apoyo Animal</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js" defer></script>
 </head>
 <body>
 
   <!-- BARRA DE PROGRESO DE LECTURA -->
   <div class="scroll-progress-bar" id="scroll-progress"></div>
 
-  <!-- BARRA DE NAVEGACIÓN -->
+  <!-- BARRA DE NAVEGACIÓN (DESDE PORTADA ABRE EN NUEVA VENTANA) -->
   <header class="navbar">
     <div class="container nav-container">
       <a href="index.html" class="brand">
@@ -30,7 +30,6 @@
           <li><a href="publicar.html" class="nav-link" target="_blank" rel="noopener">Publicar Caso</a></li>
           <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
         </ul>
-        
       </nav>
     </div>
   </header>
@@ -38,14 +37,6 @@
   <main>
     <!-- HERO / PORTADA -->
     <section class="hero">
-      <div class="floating-paws-bg" aria-hidden="true">
-        <span class="fpaw p1">🐾</span>
-        <span class="fpaw p2">🐕</span>
-        <span class="fpaw p3">🐾</span>
-        <span class="fpaw p4">🐈</span>
-        <span class="fpaw p5">🐾</span>
-      </div>
-
       <div class="container hero-grid">
         <div class="hero-content reveal-item">
           <span class="hero-badge">📍 Toda Santa Cruz • Red Solidaria Animal</span>
@@ -54,8 +45,8 @@
             Centralizamos rescates urgentes, mascotas perdidas, adopciones responsables y campañas veterinarias en toda Santa Cruz para transformar la intención de ayudar en acción real.
           </p>
           <div class="hero-actions">
-            <a href="publicar.html" class="btn btn-primary btn-shine">🐾 Publicar Caso o Rescate</a>
-            <a href="casos.html" class="btn btn-secondary">Ver Casos Activos</a>
+            <a href="publicar.html" target="_blank" rel="noopener" class="btn btn-primary btn-shine">🐾 Publicar Caso o Rescate</a>
+            <a href="casos.html" target="_blank" rel="noopener" class="btn btn-secondary">Ver Casos Activos</a>
           </div>
 
           <div class="hero-stats">
@@ -138,7 +129,7 @@
             <span class="section-tag">Urgencias del Día</span>
             <h2>Casos aprobados que buscan apoyo ahora</h2>
           </div>
-          <a href="casos.html" class="btn btn-secondary">Explorar todos los casos →</a>
+          <a href="casos.html" target="_blank" rel="noopener" class="btn btn-secondary">Explorar todos los casos →</a>
         </div>
 
         <div class="cards-grid" id="contenedor-destacados">
@@ -236,9 +227,9 @@
         <h4>Explorar</h4>
         <ul>
           <li><a href="index.html">Inicio</a></li>
-          <li><a href="casos.html">Casos y Mascotas</a></li>
-          <li><a href="refugios.html">Refugios y Campañas</a></li>
-          <li><a href="publicar.html">Publicar Caso</a></li>
+          <li><a href="casos.html" target="_blank" rel="noopener">Casos y Mascotas</a></li>
+          <li><a href="refugios.html" target="_blank" rel="noopener">Refugios y Campañas</a></li>
+          <li><a href="publicar.html" target="_blank" rel="noopener">Publicar Caso</a></li>
         </ul>
       </div>
 
