@@ -1,0 +1,207 @@
+{
+  "reportes": [
+    {
+      "id": 201,
+      "titulo": "Cachorro mestizo rescatado necesita hogar temporal urgente",
+      "categoria": "rescate",
+      "categoriaLabel": "Rescate y Urgencia",
+      "zona": "Av. Banzer y 4to Anillo — Zona Norte",
+      "contacto": "70012345 (Refugio Patitas)",
+      "pin": "1234",
+      "verificado": true,
+      "aprobado": true,
+      "urgencia": "critica",
+      "estado": "En atención",
+      "notaCierre": "",
+      "fecha": "Hace 2 horas",
+      "descripcion": "Cachorro de aproximadamente 3 meses rescatado con deshidratación leve. Ya recibió primera revisión veterinaria y necesita un hogar temporal por 15 días mientras completa su recuperación.",
+      "imagen": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
+      "apoyos": 42
+    },
+    {
+      "id": 202,
+      "titulo": "Canela (2 años) busca familia responsable en adopción",
+      "categoria": "adopcion",
+      "categoriaLabel": "En Adopción",
+      "zona": "Barrio Equipetrol — Calle 6",
+      "contacto": "75098765 (Voluntaria Sofía)",
+      "pin": "1234",
+      "verificado": false,
+      "aprobado": true,
+      "urgencia": "alta",
+      "estado": "Buscando hogar",
+      "notaCierre": "",
+      "fecha": "Hace 5 horas",
+      "descripcion": "Perrita mediana, muy dócil, esterilizada y con vacunas al día. Convive bien con niños y otros perros. Se entrega con seguimiento responsable.",
+      "imagen": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
+      "apoyos": 29
+    },
+    {
+      "id": 203,
+      "titulo": "SE BUSCA: Gatito atigrado perdido cerca del Parque Urbano",
+      "categoria": "perdidos",
+      "categoriaLabel": "Mascota Perdida",
+      "zona": "Av. Argentina y 1er Anillo — Centro",
+      "contacto": "76044321 (Familia Rojas)",
+      "pin": "1234",
+      "verificado": false,
+      "aprobado": true,
+      "urgencia": "critica",
+      "estado": "Se busca",
+      "notaCierre": "",
+      "fecha": "Ayer",
+      "descripcion": "Responde al nombre de 'Milo'. Llevaba collar azul con cascabel al momento de extraviarse por la noche. Cualquier dato o foto avisar de inmediato.",
+      "imagen": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80",
+      "apoyos": 64
+    },
+    {
+      "id": 204,
+      "titulo": "Refugio Esperanza requiere alimento balanceado y mantas",
+      "categoria": "rescate",
+      "categoriaLabel": "Rescate y Urgencia",
+      "zona": "Zona Plan 3 Mil — Av. Principal",
+      "contacto": "71055678 (Albergue Esperanza)",
+      "pin": "1234",
+      "verificado": true,
+      "aprobado": true,
+      "urgencia": "alta",
+      "estado": "En atención",
+      "notaCierre": "",
+      "fecha": "Hace 1 día",
+      "descripcion": "Actualmente albergamos 38 perros rescatados de calle. Necesitamos apoyo con croquetas para adultos y cachorros, periódicos y cobijas limpias.",
+      "imagen": "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80",
+      "apoyos": 53
+    },
+    {
+      "id": 205,
+      "titulo": "Bruno ya fue adoptado tras su rehabilitación",
+      "categoria": "adopcion",
+      "categoriaLabel": "En Adopción",
+      "zona": "Carretera al Norte — Km 9",
+      "contacto": "72100998 (Red Patitas SCZ)",
+      "pin": "1234",
+      "verificado": true,
+      "aprobado": true,
+      "urgencia": "moderada",
+      "estado": "Adoptado",
+      "notaCierre": "Adoptado por la familia Méndez. Ya cuenta con su patio seguro y controles veterinarios al día.",
+      "fecha": "Hace 2 días",
+      "descripcion": "Gracias a la difusión ciudadana y el apoyo de la clínica aliada, Bruno completó su tratamiento dermatológico y ya vive con su nueva familia.",
+      "imagen": "https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80",
+      "apoyos": 87
+    },
+    {
+      "id": 206,
+      "titulo": "Dos gatitos rescatados listos para adopción conjunta o separada",
+      "categoria": "adopcion",
+      "categoriaLabel": "En Adopción",
+      "zona": "Av. Santos Dumont — Zona Sur",
+      "contacto": "72133445 (Hogar Temporal Luz)",
+      "pin": "1234",
+      "verificado": false,
+      "aprobado": true,
+      "urgencia": "moderada",
+      "estado": "Buscando hogar",
+      "notaCierre": "",
+      "fecha": "Hace 3 días",
+      "descripcion": "Tienen 2 meses, ya usan arenero y están desparasitados. Buscan hogares seguros con ventanas protegidas en Santa Cruz.",
+      "imagen": "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80",
+      "apoyos": 36
+    }
+  ],
+  "guias": [
+    {
+      "id": 1,
+      "tipo": "refugios",
+      "badge": "Refugio y Acopio",
+      "verificado": true,
+      "titulo": "Albergue Solidario y Punto de Donación Norte",
+      "lugar": "Av. Beni y 5to Anillo — Zona Norte",
+      "horario": "Lunes a Sábado: 08:30 a 17:30",
+      "detalle": "Recepción directa de alimento balanceado, medicamentos veterinarios, correas y mantas. Visitas coordinadas para adopción."
+    },
+    {
+      "id": 2,
+      "tipo": "campanas",
+      "badge": "Campaña Veterinaria",
+      "verificado": true,
+      "titulo": "Esterilización a Bajo Costo y Desparasitación",
+      "lugar": "Clínica Veterinaria Aliada — Av. Piraí",
+      "horario": "Miércoles y Sábados: 08:00 a 14:00",
+      "detalle": "Cupos solidarios para perros y gatos rescatados o de familias de escasos recursos. Incluye medicación postoperatoria."
+    },
+    {
+      "id": 3,
+      "tipo": "refugios",
+      "badge": "Red de Hogares",
+      "verificado": true,
+      "titulo": "Centro de Tránsito Patitas del Sur",
+      "lugar": "Av. Santos Dumont — Zona Sur",
+      "horario": "Todos los días: 09:00 a 18:00",
+      "detalle": "Coordinación de hogares temporales de emergencia para animales atropellados o abandonados mientras encuentran familia."
+    },
+    {
+      "id": 4,
+      "tipo": "campanas",
+      "badge": "Vacunación Gratuita",
+      "verificado": true,
+      "titulo": "Jornada Antirrábica y Control Preventivo",
+      "lugar": "Parque Urbano Central — Explanada Oeste",
+      "horario": "Domingos: 08:30 a 13:00",
+      "detalle": "Aplicación gratuita de vacuna antirrábica, entrega de cartilla sanitaria y orientación sobre tenencia responsable."
+    },
+    {
+      "id": 5,
+      "tipo": "refugios",
+      "badge": "Acopio Solidario",
+      "verificado": false,
+      "titulo": "Punto Vecinal Mascotero — Zona Equipetrol",
+      "lugar": "Av. San Martín — Barrio Equipetrol",
+      "horario": "Lunes a Viernes: 09:00 a 19:00",
+      "detalle": "Contenedor solidario para dejar bolsas de croquetas selladas, platos, camas y transportadoras en buen estado."
+    },
+    {
+      "id": 6,
+      "tipo": "campanas",
+      "badge": "Atención de Emergencia",
+      "verificado": true,
+      "titulo": "Red de Veterinarios Voluntarios 24/7",
+      "lugar": "Cobertura en toda Santa Cruz (Ciudad y alrededores)",
+      "horario": "Atención de urgencias previa coordinación",
+      "detalle": "Tarifa social para rescates viales comprobados reportados a través de la comunidad Patitas SCZ."
+    }
+  ],
+  "chatbot": {
+    "bienvenida": "¡Hola! Soy el Asistente de Patitas SCZ 🐾. ¿Cómo quieres ayudar hoy?",
+    "opciones": [
+      {
+        "id": "adoptar",
+        "pregunta": "¿Cómo puedo adoptar o dar hogar temporal?",
+        "respuesta": "Ingresa a 'Casos y Mascotas', abre la ficha del animalito y pulsa 'Contactar por WhatsApp' para hablar directo con el rescatista.",
+        "accionTexto": "Ver mascotas en adopción",
+        "accionDestino": "casos.html"
+      },
+      {
+        "id": "perdido",
+        "pregunta": "Se perdió mi mascota o encontré una, ¿qué hago?",
+        "respuesta": "Publícala de inmediato con su foto clara, zona o barrio exacto y teléfono de contacto para alertar a toda la comunidad.",
+        "accionTexto": "Publicar caso ahora",
+        "accionDestino": "publicar.html"
+      },
+      {
+        "id": "pin",
+        "pregunta": "¿Para qué sirve el PIN de 4 dígitos al publicar?",
+        "respuesta": "Protege tu publicación para que solo tú (o un moderador) puedas editar los datos, eliminarla o marcarla como Sanado, Adoptado o Encontrado.",
+        "accionTexto": "Ir a publicar caso",
+        "accionDestino": "publicar.html"
+      },
+      {
+        "id": "campanas",
+        "pregunta": "¿Dónde hay campañas de esterilización o refugios?",
+        "respuesta": "Revisa nuestro directorio con sello verificado para jornadas de esterilización solidaria, vacunas y acopio de alimento en toda Santa Cruz.",
+        "accionTexto": "Ver refugios y campañas",
+        "accionDestino": "refugios.html"
+      }
+    ]
+  }
+}

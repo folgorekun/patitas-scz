@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casos y Mascotas — Patitas SCZ</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand" target="_blank" rel="noopener">
+        <span class="brand-icon paw-wag">🐾</span>
+        <span class="brand-text">Patitas <strong>SCZ</strong></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">☰</button>
+
+      <nav class="nav-menu" id="nav-menu">
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link" target="_blank" rel="noopener">Inicio</a></li>
+          <li><a href="casos.html" class="nav-link active">Casos y Mascotas</a></li>
+          <li><a href="refugios.html" class="nav-link" target="_blank" rel="noopener">Refugios y Campañas</a></li>
+          <li><a href="publicar.html" class="nav-link" target="_blank" rel="noopener">Publicar Caso</a></li>
+          <li><a href="index.html#contacto" class="nav-link" target="_blank" rel="noopener">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-banner">
+      <div class="container banner-flex">
+        <div>
+          <span class="section-tag">Red Solidaria en toda Santa Cruz</span>
+          <h1>Casos de Rescate, Adopción y Mascotas Perdidas</h1>
+          <p>Contacta directo por WhatsApp para ayudar o gestiona tu publicación con tu PIN de autor.</p>
+        </div>
+        <button id="btn-toggle-moderador" class="btn btn-mod-banner">
+          🛡️ Modo Moderador <span id="badge-pendientes" class="mod-count" hidden>0</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- BARRA DE ESTADO DE MODERADOR -->
+    <div class="mod-status-bar" id="mod-status-bar" hidden>
+      <div class="container mod-status-flex">
+        <span>🛡️ <strong>Modo Moderador Activo:</strong> Puedes aprobar publicaciones pendientes, editar fichas y otorgar el sello de Aliado Verificado.</span>
+        <button id="btn-salir-moderador" class="btn btn-sm btn-secondary">Salir de Moderador</button>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <!-- CONTROLES DE FILTRADO Y ORDENAMIENTO -->
+        <div class="controls-bar">
+          <div class="filter-buttons" id="filter-buttons">
+            <button class="filter-btn active" data-categoria="todos">Todos</button>
+            <button class="filter-btn" data-categoria="rescate">🚨 Rescate y Urgencia</button>
+            <button class="filter-btn" data-categoria="adopcion">🏡 En Adopción</button>
+            <button class="filter-btn" data-categoria="perdidos">🔍 Mascotas Perdidas</button>
+          </div>
+
+          <div class="search-sort-group">
+            <input 
+              type="text" 
+              id="buscador-reportes" 
+              class="input-control" 
+              placeholder="Buscar por zona, barrio o nombre..."
+              aria-label="Buscar casos"
+            >
+            <select id="filtro-urgencia" class="input-control" aria-label="Filtrar por urgencia">
+              <option value="todas">Todas las urgencias</option>
+              <option value="critica">Urgencia Crítica</option>
+              <option value="alta">Urgencia Alta</option>
+              <option value="moderada">Moderada</option>
+            </select>
+            <select id="ordenar-reportes" class="input-control" aria-label="Ordenar casos">
+              <option value="recientes">Orden: Más recientes</option>
+              <option value="importancia">Importancia (Crítica → Moderada)</option>
+              <option value="alfabetico">Alfabético (A - Z)</option>
+              <option value="apoyos">Mayor apoyo ciudadano</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- GRILLA DE TARJETAS -->
+        <div class="cards-grid" id="contenedor-reportes">
+          <!-- Renderizado dinámico por app.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL PARA DETALLE, WHATSAPP, PIN Y EDICIÓN -->
+  <div class="modal-overlay" id="modal-detalle" hidden>
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Cerrar ventana">&times;</button>
+      <img id="modal-img" src="" alt="Imagen de la mascota" class="modal-img">
+      
+      <!-- VISTA NORMAL -->
+      <div class="modal-body" id="modal-vista-normal">
+        <div class="modal-badges">
+          <span id="modal-categoria" class="badge-cat"></span>
+          <span id="modal-urgencia" class="badge-urg"></span>
+          <span id="modal-estado-badge" class="badge-state"></span>
+          <span id="modal-verificado-badge" class="verified-seal" hidden>✔ Aliado Verificado</span>
+        </div>
+        <h3 id="modal-titulo"></h3>
+        <p class="modal-meta">📍 <strong id="modal-zona"></strong> • <span id="modal-fecha"></span></p>
+        
+        <div id="modal-nota-cierre-box" class="happy-ending-box" hidden></div>
+
+        <p class="modal-contact-box">📞 <strong>Responsable:</strong> <span id="modal-contacto"></span></p>
+        <p id="modal-descripcion" class="modal-desc"></p>
+
+        <!-- ACCIONES DIRECTAS DE AYUDA -->
+        <div class="modal-direct-actions">
+          <a id="btn-whatsapp-modal" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp">
+            💬 Contactar por WhatsApp
+          </a>
+          <button id="btn-apoyar-modal" class="btn btn-primary">
+            🤝 Apoyar (<span id="modal-apoyos">0</span>)
+          </button>
+        </div>
+
+        <!-- CAJA DE VERIFICACIÓN DE PIN DE AUTOR -->
+        <div id="modal-pin-box" class="inline-action-box" hidden>
+          <p class="inline-box-title">🔒 Verificación de Autoría</p>
+          <p class="inline-box-desc">Ingresa el PIN de 4 dígitos que creaste al publicar este caso:</p>
+          <div class="inline-box-row">
+            <input type="password" id="input-pin-autor" maxlength="4" placeholder="PIN (Ej: 1234)" class="input-control">
+            <button type="button" id="btn-confirmar-pin" class="btn btn-primary btn-sm">Verificar</button>
+            <button type="button" id="btn-cancelar-pin" class="btn btn-secondary btn-sm">Cancelar</button>
+          </div>
+          <p id="pin-error-msg" class="form-error" style="margin-top:0.5rem; margin-bottom:0;" hidden>❌ PIN incorrecto. Intenta nuevamente.</p>
+        </div>
+
+        <!-- CAJA DE NOTA DE CIERRE AL MARCAR SANADO / ADOPTADO / ENCONTRADO -->
+        <div id="modal-cierre-box" class="inline-action-box cierre-box" hidden>
+          <p class="inline-box-title" id="cierre-box-titulo">🎉 Registrar Final Feliz</p>
+          <p class="inline-box-desc">Escribe una breve nota de cierre para informar a la comunidad (opcional):</p>
+          <input type="text" id="input-nota-cierre" placeholder="Ej: Ya regresó con su familia en Equipetrol" class="input-control" style="width:100%; margin-bottom:0.6rem;">
+          <div class="inline-box-row">
+            <button type="button" id="btn-confirmar-cierre" class="btn btn-primary btn-sm">✔ Confirmar Estado</button>
+            <button type="button" id="btn-cancelar-cierre" class="btn btn-secondary btn-sm">Cancelar</button>
+          </div>
+        </div>
+
+        <!-- ACCIONES DE GESTIÓN (MODERACIÓN / AUTOR) -->
+        <div class="modal-footer-actions">
+          <button id="btn-aprobar-modal" class="btn btn-primary" hidden>✅ Aprobar Publicación</button>
+          <button id="btn-verificar-modal" class="btn btn-secondary" hidden>✔ Dar Check Verificado</button>
+          <button id="btn-resolver-modal" class="btn btn-success-outline">✔ Marcar como Sanado</button>
+          <button id="btn-editar-modal" class="btn btn-secondary">✏️ Editar</button>
+          <button id="btn-eliminar-modal" class="btn btn-danger-outline">🗑️ Eliminar</button>
+        </div>
+      </div>
+
+      <!-- FORMULARIO DE EDICIÓN -->
+      <form class="modal-body" id="form-editar-reporte" hidden>
+        <h3 style="margin-bottom: 1rem;">✏️ Editar Ficha del Caso</h3>
+        
+        <div class="form-group">
+          <label for="edit-titulo">Título del caso *</label>
+          <input type="text" id="edit-titulo" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-categoria">Categoría *</label>
+            <select id="edit-categoria" required>
+              <option value="rescate">Rescate y Urgencia</option>
+              <option value="adopcion">En Adopción</option>
+              <option value="perdidos">Mascota Perdida</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-urgencia">Urgencia *</label>
+            <select id="edit-urgencia" required>
+              <option value="critica">Crítica</option>
+              <option value="alta">Alta</option>
+              <option value="moderada">Moderada</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-zona">Zona / Barrio *</label>
+            <input type="text" id="edit-zona" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-estado">Estado *</label>
+            <select id="edit-estado" required>
+              <option value="Buscando hogar">Buscando hogar</option>
+              <option value="En atención">En atención</option>
+              <option value="Se busca">Se busca</option>
+              <option value="Sanado">Sanado (Rescate completado)</option>
+              <option value="Adoptado">Adoptado (Con familia)</option>
+              <option value="Encontrado">Encontrado (Regresó a casa)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-contacto">Teléfono / WhatsApp *</label>
+          <input type="text" id="edit-contacto" required>
+        </div>
+
+        <div class="form-group" id="grupo-edit-verificado" hidden>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="checkbox" id="edit-verificado">
+            ✔ Otorgar sello de Aliado Verificado (Refugio / Veterinaria)
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-descripcion">Descripción *</label>
+          <textarea id="edit-descripcion" rows="2" required></textarea>
+        </div>
+
+        <div class="modal-footer-actions">
+          <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+          <button type="button" id="btn-cancelar-edicion" class="btn btn-secondary">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL ACCESO MODERADOR -->
+  <div class="modal-overlay" id="modal-moderador" hidden>
+    <div class="modal-box" style="max-width: 420px;">
+      <button class="modal-close" id="modal-mod-close" aria-label="Cerrar">&times;</button>
+      <form class="modal-body" id="form-login-moderador">
+        <h3>🛡️ Acceso de Moderador</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.5rem 0 1rem;">
+          Ingresa la clave institucional para revisar publicaciones pendientes y otorgar sellos de verificación (Clave demo: <strong>2026</strong>).
+        </p>
+        <div class="form-group">
+          <label for="input-clave-mod">Clave de Moderador *</label>
+          <input type="password" id="input-clave-mod" placeholder="Ingresa la clave..." required>
+        </div>
+        <p id="mod-login-error" class="form-error" hidden>❌ Clave incorrecta.</p>
+        <button type="submit" class="btn btn-primary btn-block">Desbloquear Panel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand footer-brand">
+          <span class="brand-icon">🐾</span>
+          <span class="brand-text">Patitas <strong>SCZ</strong></span>
+        </div>
+        <p class="footer-desc">
+          Red ciudadana de rescate, adopción responsable y articulación veterinaria en toda Santa Cruz de la Sierra. <strong>Adopta, no compres.</strong>
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Explorar</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="casos.html">Casos y Mascotas</a></li>
+          <li><a href="refugios.html">Refugios y Campañas</a></li>
+          <li><a href="publicar.html">Publicar Caso</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Contacto y Comunidad</h4>
+        <p>📍 Santa Cruz de la Sierra, Bolivia</p>
+        <p>✉️ contacto@patitasscz.org</p>
+        <p>🕒 Red solidaria activa 24/7</p>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 Patitas SCZ — Todos los derechos reservados.</span>
+      <button id="btn-ver-json" class="btn-json-discrete">{ } Datos JSON en Vivo</button>
+    </div>
+  </footer>
+
+  <!-- MODAL VISOR JSON -->
+  <div class="modal-overlay" id="modal-json" hidden>
+    <div class="modal-box modal-json-box">
+      <button class="modal-close" id="modal-json-close" aria-label="Cerrar">&times;</button>
+      <div class="modal-body">
+        <div class="json-header">
+          <h3>{ } Colección de Datos en Vivo (JSON)</h3>
+          <button id="btn-reset-json" class="btn btn-danger-outline btn-sm">🔄 Restaurar datos iniciales</button>
+        </div>
+        <pre id="json-viewer-content" class="json-code"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHATBOT ASISTENTE -->
+  <div class="chatbot-widget">
+    <button class="chatbot-toggle pet-bob" id="chatbot-toggle" aria-label="Abrir asistente">🐶</button>
+    <div class="chatbot-window" id="chatbot-window" hidden>
+      <div class="chatbot-header">
+        <strong>Asistente Patitas SCZ</strong>
+        <button id="chatbot-close" aria-label="Cerrar chat">&times;</button>
+      </div>
+      <div class="chatbot-messages" id="chatbot-messages"></div>
+      <div class="chatbot-options" id="chatbot-options"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
