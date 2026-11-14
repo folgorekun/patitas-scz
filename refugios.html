@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Refugios y Campañas — Patitas SCZ</title>
+    <meta name="description" content="Patitas SCZ: red solidaria de rescate, adopción y apoyo animal en Santa Cruz de la Sierra.">
+  <meta name="theme-color" content="#0d9488">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Patitas SCZ — Red de Rescate, Adopción y Apoyo Animal">
+  <meta property="og:description" content="Rescates, adopciones y campañas veterinarias en toda Santa Cruz.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🐾</text></svg>">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js" defer></script>
 </head>
 <body>
 
-  <!-- BARRA DE PROGRESO DE LECTURA -->
-  <div class="scroll-progress-bar" id="scroll-progress"></div>
-
-  <!-- BARRA DE NAVEGACIÓN (NAVEGA EN LA MISMA VENTANA) -->
+  <!-- BARRA DE NAVEGACIÓN -->
   <header class="navbar">
     <div class="container nav-container">
       <a href="index.html" class="brand">
@@ -36,23 +38,11 @@
 
   <main>
     <section class="page-banner">
-      <div class="container banner-flex">
-        <div>
-          <span class="section-tag">Albergues, Acopio y Veterinarias Aliadas</span>
-          <h1>Refugios y Campañas Solidarias en Santa Cruz</h1>
-          <p>Encuentra puntos oficiales de donación, jornadas de vacunación y esterilización a bajo costo.</p>
-        </div>
-
-        <div class="banner-lottie-badge happy-dog-badge" aria-hidden="true">
-          <lottie-player
-            src="Happy%20Dog.json"
-            background="transparent"
-            speed="1"
-            style="width: 135px; height: 115px;"
-            loop
-            autoplay>
-          </lottie-player>
-        </div>
+      <div class="banner-lottie" data-lottie="pet" aria-hidden="true"></div>
+      <div class="container">
+        <span class="section-tag">Directorio Solidario en Santa Cruz</span>
+        <h1>Refugios, Puntos de Acopio y Campañas Veterinarias</h1>
+        <p>Encuentra centros con sello verificado donde donar alimento, adoptar presencialmente o esterilizar a bajo costo.</p>
       </div>
     </section>
 
@@ -62,19 +52,20 @@
           <div class="filter-buttons" id="guias-filter-buttons">
             <button class="filter-btn active" data-tipo="todos">Todos los puntos</button>
             <button class="filter-btn" data-tipo="refugios">🏠 Refugios y Acopio</button>
-            <button class="filter-btn" data-tipo="campanas">💉 Campañas Veterinarias</button>
+            <button class="filter-btn" data-tipo="campanas">🩺 Campañas Veterinarias</button>
           </div>
-          <a href="index.html#contacto" class="btn btn-secondary">➕ Registrar Refugio o Campaña</a>
         </div>
 
         <div class="guides-grid" id="contenedor-guias">
-          <!-- Renderizado dinámico desde app.js -->
+          <!-- Renderizado dinámico desde datos.json -->
         </div>
       </div>
     </section>
   </main>
 
   <!-- PIE DE PÁGINA -->
+  <div class="dog-strip" aria-hidden="true"><div class="dog-walker"><div id="lottie-walker"></div></div></div>
+
   <footer class="footer">
     <div class="container footer-grid">
       <div>
@@ -138,6 +129,7 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

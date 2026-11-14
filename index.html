@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patitas SCZ — Red de Rescate, Adopción y Apoyo Animal</title>
+    <meta name="description" content="Patitas SCZ: red solidaria de rescate, adopción y apoyo animal en Santa Cruz de la Sierra.">
+  <meta name="theme-color" content="#0d9488">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Patitas SCZ — Red de Rescate, Adopción y Apoyo Animal">
+  <meta property="og:description" content="Rescates, adopciones y campañas veterinarias en toda Santa Cruz.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🐾</text></svg>">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js" defer></script>
 </head>
 <body>
 
-  <!-- BARRA DE PROGRESO DE LECTURA -->
-  <div class="scroll-progress-bar" id="scroll-progress"></div>
-
-  <!-- BARRA DE NAVEGACIÓN (DESDE PORTADA ABRE EN NUEVA VENTANA) -->
+  <!-- BARRA DE NAVEGACIÓN -->
   <header class="navbar">
     <div class="container nav-container">
       <a href="index.html" class="brand">
@@ -25,9 +27,9 @@
       <nav class="nav-menu" id="nav-menu">
         <ul class="nav-list">
           <li><a href="index.html" class="nav-link active">Inicio</a></li>
-          <li><a href="casos.html" class="nav-link" target="_blank" rel="noopener">Casos y Mascotas</a></li>
-          <li><a href="refugios.html" class="nav-link" target="_blank" rel="noopener">Refugios y Campañas</a></li>
-          <li><a href="publicar.html" class="nav-link" target="_blank" rel="noopener">Publicar Caso</a></li>
+          <li><a href="casos.html" class="nav-link">Casos y Mascotas</a></li>
+          <li><a href="refugios.html" class="nav-link">Refugios y Campañas</a></li>
+          <li><a href="publicar.html" class="nav-link">Publicar Caso</a></li>
           <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
         </ul>
       </nav>
@@ -35,42 +37,56 @@
   </header>
 
   <main>
-    <!-- HERO / PORTADA -->
+    <!-- HERO / PORTADA CON ANIMACIONES DE HUELLAS -->
     <section class="hero">
+      <div class="floating-paws-bg" aria-hidden="true">
+        <span class="fpaw p1">🐾</span>
+        <span class="fpaw p2">🐕</span>
+        <span class="fpaw p3">🐾</span>
+        <span class="fpaw p4">🐈</span>
+        <span class="fpaw p5">🐾</span>
+      </div>
+
       <div class="container hero-grid">
-        <div class="hero-content reveal-item">
+        <div class="hero-content">
           <span class="hero-badge">📍 Toda Santa Cruz • Red Solidaria Animal</span>
           <h1>Conectamos corazones para rescatar, sanar y dar hogar</h1>
           <p class="hero-lead">
             Centralizamos rescates urgentes, mascotas perdidas, adopciones responsables y campañas veterinarias en toda Santa Cruz para transformar la intención de ayudar en acción real.
           </p>
           <div class="hero-actions">
-            <a href="publicar.html" target="_blank" rel="noopener" class="btn btn-primary btn-shine">🐾 Publicar Caso o Rescate</a>
-            <a href="casos.html" target="_blank" rel="noopener" class="btn btn-secondary">Ver Casos Activos</a>
+            <a href="publicar.html" class="btn btn-primary">🐾 Publicar Caso o Rescate</a>
+            <a href="casos.html" class="btn btn-secondary">Ver Casos Activos</a>
           </div>
 
           <div class="hero-stats">
             <div class="stat-item">
-              <strong id="stat-total" data-target="6">0</strong>
+              <strong id="stat-total">6</strong>
               <span>Casos verificados</span>
             </div>
             <div class="stat-item">
-              <strong id="stat-urgentes" data-target="5">0</strong>
+              <strong id="stat-urgentes">5</strong>
               <span>Necesitan apoyo hoy</span>
             </div>
             <div class="stat-item">
-              <strong id="stat-resueltos" data-target="1">0</strong>
+              <strong id="stat-resueltos">1</strong>
               <span>Finales felices</span>
             </div>
           </div>
         </div>
 
-        <div class="hero-visual reveal-item">
-          <img 
-            src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1000&q=80" 
-            alt="Mascotas rescatadas en Santa Cruz" 
-            class="hero-img"
-          >
+        <div class="hero-visual">
+          <div class="carousel" id="hero-carousel" aria-roledescription="carrusel" aria-label="Imágenes de refugios y mascotas">
+          <figure class="slide active"><img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1000&q=80" alt="Rescatamos, sanamos y damos hogar" loading="eager"><figcaption>Rescatamos, sanamos y damos hogar</figcaption></figure>
+          <figure class="slide"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1000&q=80" alt="Refugios aliados en toda Santa Cruz" loading="lazy"><figcaption>Refugios aliados en toda Santa Cruz</figcaption></figure>
+          <figure class="slide"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80" alt="Hogares temporales que salvan vidas" loading="lazy"><figcaption>Hogares temporales que salvan vidas</figcaption></figure>
+          <figure class="slide"><img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1000&q=80" alt="Campañas de esterilización y vacunas" loading="lazy"><figcaption>Campañas de esterilización y vacunas</figcaption></figure>
+          <figure class="slide"><img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=1000&q=80" alt="Adopta, no compres" loading="lazy"><figcaption>Adopta, no compres</figcaption></figure>
+          <figure class="slide"><img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=1000&q=80" alt="Cada final feliz empieza con alguien como tú" loading="lazy"><figcaption>Cada final feliz empieza con alguien como tú</figcaption></figure>
+          <button class="carousel-btn prev" aria-label="Imagen anterior">‹</button>
+          <button class="carousel-btn next" aria-label="Imagen siguiente">›</button>
+          <div class="carousel-dots"></div>
+        </div>
           <div class="hero-floating-card">
             <span class="floating-dot"></span>
             <div>
@@ -82,10 +98,12 @@
       </div>
     </section>
 
-    <!-- BIENVENIDA E INTRODUCCIÓN -->
+    <!-- BIENVENIDA E INTRODUCCIÓN: ¿QUIÉNES SOMOS Y CÓMO SOLUCIONAMOS? -->
+    <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>🐾 Adopta, no compres</span><span>🐶 Rescata</span><span>🐱 Esteriliza</span><span>💚 Hogar temporal</span><span>🩺 Campañas veterinarias</span><span>🐾 Adopta, no compres</span><span>🐶 Rescata</span><span>🐱 Esteriliza</span><span>💚 Hogar temporal</span><span>🩺 Campañas veterinarias</span><span>🐾 Adopta, no compres</span><span>🐶 Rescata</span><span>🐱 Esteriliza</span><span>💚 Hogar temporal</span><span>🩺 Campañas veterinarias</span><span>🐾 Adopta, no compres</span><span>🐶 Rescata</span><span>🐱 Esteriliza</span><span>💚 Hogar temporal</span><span>🩺 Campañas veterinarias</span></div></div>
+
     <section id="como-funcionamos" class="section">
       <div class="container">
-        <div class="section-header text-center reveal-item">
+        <div class="section-header text-center">
           <span class="section-tag">Nuestro Propósito</span>
           <h2>¿Quiénes somos y cómo logramos soluciones reales?</h2>
           <p>
@@ -94,7 +112,7 @@
         </div>
 
         <div class="cycle-grid">
-          <article class="cycle-card reveal-item" style="transition-delay: 0.08s;">
+          <article class="cycle-card">
             <div class="cycle-step">01</div>
             <h3>Publicación Moderada y Segura</h3>
             <p>
@@ -102,7 +120,7 @@
             </p>
           </article>
 
-          <article class="cycle-card reveal-item" style="transition-delay: 0.18s;">
+          <article class="cycle-card">
             <div class="cycle-step">02</div>
             <h3>Conexión Inmediata por WhatsApp</h3>
             <p>
@@ -110,7 +128,7 @@
             </p>
           </article>
 
-          <article class="cycle-card reveal-item" style="transition-delay: 0.28s;">
+          <article class="cycle-card">
             <div class="cycle-step">03</div>
             <h3>Refugios y Campañas Verificadas</h3>
             <p>
@@ -124,12 +142,12 @@
     <!-- VISTA PREVIA DE CASOS URGENTES -->
     <section class="section bg-light">
       <div class="container">
-        <div class="section-header-flex reveal-item">
+        <div class="section-header-flex">
           <div>
             <span class="section-tag">Urgencias del Día</span>
             <h2>Casos aprobados que buscan apoyo ahora</h2>
           </div>
-          <a href="casos.html" target="_blank" rel="noopener" class="btn btn-secondary">Explorar todos los casos →</a>
+          <a href="casos.html" class="btn btn-secondary">Explorar todos los casos →</a>
         </div>
 
         <div class="cards-grid" id="contenedor-destacados">
@@ -141,7 +159,7 @@
     <!-- FORMULARIO DE CONTACTO CIUDADANO / ALIANZAS -->
     <section id="contacto" class="section">
       <div class="container form-section-grid">
-        <div class="form-info reveal-item">
+        <div class="form-info">
           <span class="section-tag">Súmate a la Red</span>
           <h2>¿Tienes un refugio, clínica veterinaria o quieres ser voluntario?</h2>
           <p>
@@ -154,7 +172,7 @@
           </ul>
         </div>
 
-        <form class="report-form reveal-item" id="form-contacto" novalidate>
+        <form class="report-form" id="form-contacto" novalidate>
           <h3>Formulario de Contacto</h3>
 
           <div class="form-row">
@@ -188,29 +206,15 @@
           <p class="form-error" id="contacto-error" hidden>⚠️ Por favor completa todos los campos con un correo o número de teléfono válido.</p>
           <div class="contact-success" id="contacto-exito" hidden></div>
 
-          <button type="submit" class="btn btn-primary btn-block btn-shine">✉️ Enviar Mensaje</button>
+          <button type="submit" class="btn btn-primary btn-block">✉️ Enviar Mensaje</button>
         </form>
       </div>
     </section>
   </main>
 
-  <!-- PERRITO CAMINANDO POR TODA LA PANTALLA (Cute Doggie.json) -->
-  <div class="walking-dog-track" id="walking-dog-container" title="¡Haz clic para saludar!">
-    <div class="walking-dog-bubble" id="walking-dog-bubble">¡Guau! ¿Ayudamos hoy? 🐾</div>
-    <div class="walking-dog-sprite" id="walking-dog-sprite">
-      <lottie-player
-        id="lottie-walking-dog"
-        src="Cute%20Doggie.json"
-        background="transparent"
-        speed="1"
-        loop
-        autoplay>
-      </lottie-player>
-    </div>
-    <button type="button" class="btn-pause-dog" id="btn-pause-dog" aria-label="Pausar o reanudar mascota" title="Pausar/Reanudar recorrido">⏸</button>
-  </div>
-
   <!-- PIE DE PÁGINA -->
+  <div class="dog-strip" aria-hidden="true"><div class="dog-walker"><div id="lottie-walker"></div></div></div>
+
   <footer class="footer">
     <div class="container footer-grid">
       <div>
@@ -227,9 +231,9 @@
         <h4>Explorar</h4>
         <ul>
           <li><a href="index.html">Inicio</a></li>
-          <li><a href="casos.html" target="_blank" rel="noopener">Casos y Mascotas</a></li>
-          <li><a href="refugios.html" target="_blank" rel="noopener">Refugios y Campañas</a></li>
-          <li><a href="publicar.html" target="_blank" rel="noopener">Publicar Caso</a></li>
+          <li><a href="casos.html">Casos y Mascotas</a></li>
+          <li><a href="refugios.html">Refugios y Campañas</a></li>
+          <li><a href="publicar.html">Publicar Caso</a></li>
         </ul>
       </div>
 
@@ -274,6 +278,7 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

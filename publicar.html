@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publicar Caso — Patitas SCZ</title>
+    <meta name="description" content="Patitas SCZ: red solidaria de rescate, adopción y apoyo animal en Santa Cruz de la Sierra.">
+  <meta name="theme-color" content="#0d9488">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Patitas SCZ — Red de Rescate, Adopción y Apoyo Animal">
+  <meta property="og:description" content="Rescates, adopciones y campañas veterinarias en toda Santa Cruz.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🐾</text></svg>">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js" defer></script>
 </head>
 <body>
 
-  <!-- BARRA DE PROGRESO DE LECTURA -->
-  <div class="scroll-progress-bar" id="scroll-progress"></div>
-
-  <!-- BARRA DE NAVEGACIÓN (NAVEGA EN LA MISMA VENTANA) -->
+  <!-- BARRA DE NAVEGACIÓN -->
   <header class="navbar">
     <div class="container nav-container">
       <a href="index.html" class="brand">
@@ -36,53 +38,40 @@
 
   <main>
     <section class="page-banner">
-      <div class="container banner-flex">
-        <div>
-          <span class="section-tag">Participación Ciudadana Responsable</span>
-          <h1>Publicar un Caso de Rescate, Adopción o Extravío</h1>
-          <p>Completa los datos para que la comunidad de Santa Cruz pueda ayudarte de inmediato.</p>
-        </div>
-
-        <div class="banner-lottie-badge" aria-hidden="true">
-          <lottie-player
-            src="paws%20animation.json"
-            background="transparent"
-            speed="1"
-            style="width: 110px; height: 110px;"
-            loop
-            autoplay>
-          </lottie-player>
-        </div>
+      <div class="banner-lottie" data-lottie="pet" aria-hidden="true"></div>
+      <div class="container">
+        <span class="section-tag">Alerta Solidaria Moderada</span>
+        <h1>Publicar Rescate, Adopción o Mascota Perdida</h1>
+        <p>Tu publicación pasará por validación rápida y quedará protegida con tu PIN personal de 4 dígitos.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container form-section-grid">
-        <div class="form-info reveal-item">
-          <span class="section-tag">Antes de Publicar</span>
-          <h2>Consejos para lograr ayuda más rápido</h2>
+        <div class="form-info">
+          <span class="section-tag">Seguridad y Confianza</span>
+          <h2>¿Cómo protegemos las publicaciones?</h2>
           <p>
-            Una ficha clara y verificable multiplica las posibilidades de encontrar un hogar temporal, localizar a una mascota extraviada o conseguir atención veterinaria urgente.
+            Para evitar publicaciones falsas o venta ilegal de animales, aplicamos dos filtros sencillos:
           </p>
           <ul class="checklist">
-            <li>📍 Indica una referencia exacta (anillo, avenida o barrio)</li>
-            <li>📸 Sube una foto nítida donde se distinga bien el animalito</li>
-            <li>🔒 Guarda tu <strong>PIN de 4 dígitos</strong> para editar o cerrar el caso</li>
-            <li>🛡️ Todo reporte pasa por moderación previa para evitar venta ilegal</li>
+            <li>🛡️ <strong>Revisión previa:</strong> Todo reporte nuevo entra como <em>Pendiente</em> hasta ser aprobado por un moderador.</li>
+            <li>🔒 <strong>PIN de Autor (4 dígitos):</strong> Solo tú podrás editar, borrar o marcar el caso como <em>Sanado, Adoptado o Encontrado</em>.</li>
+            <li>✔ <strong>Sello Verificado:</strong> Los refugios y veterinarias registradas reciben su insignia oficial tras la validación interna.</li>
           </ul>
         </div>
 
-        <form class="report-form reveal-item" id="form-reporte" novalidate>
-          <h3>Ficha del Caso</h3>
+        <form class="report-form" id="form-reporte" novalidate>
+          <h3>Datos del Caso</h3>
 
           <div class="form-group">
-            <label for="rep-titulo">Título del caso *</label>
-            <input type="text" id="rep-titulo" placeholder="Ej: Cachorro rescatado en 3er Anillo busca hogar temporal" required>
+            <label for="rep-titulo">Título breve del caso *</label>
+            <input type="text" id="rep-titulo" placeholder="Ej: Perrito rescatado en Av. Pirai busca hogar temporal" required>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="rep-categoria">Categoría *</label>
+              <label for="rep-categoria">Tipo de publicación *</label>
               <select id="rep-categoria" required>
                 <option value="">Selecciona categoría...</option>
                 <option value="rescate">🚨 Rescate y Urgencia</option>
@@ -94,8 +83,8 @@
             <div class="form-group">
               <label for="rep-urgencia">Nivel de urgencia *</label>
               <select id="rep-urgencia" required>
-                <option value="alta">Alta</option>
-                <option value="critica">Crítica (Emergencia inmediata)</option>
+                <option value="critica">Crítica (Atención inmediata)</option>
+                <option value="alta">Alta (Esta semana)</option>
                 <option value="moderada">Moderada</option>
               </select>
             </div>
@@ -103,47 +92,46 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="rep-zona">Zona / Barrio en Santa Cruz *</label>
-              <input type="text" id="rep-zona" placeholder="Ej: Av. Beni y 4to Anillo" required>
+              <label for="rep-zona">Zona / Barrio / Municipio *</label>
+              <input type="text" id="rep-zona" placeholder="Ej: Zona Norte / Plan 3 Mil / Equipetrol" required>
             </div>
 
             <div class="form-group">
-              <label for="rep-contacto">WhatsApp / Teléfono *</label>
-              <input type="text" id="rep-contacto" placeholder="Ej: 70012345 (Tu nombre)" required>
+              <label for="rep-contacto">Celular WhatsApp y Nombre *</label>
+              <input type="text" id="rep-contacto" placeholder="Ej: 70099887 (Carlos)" required>
             </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="rep-pin">PIN de autor (4 dígitos) *</label>
-              <input type="password" id="rep-pin" maxlength="4" placeholder="Ej: 1234" required>
-            </div>
-
-            <div class="form-group">
-              <label for="rep-foto">Foto de la mascota (Opcional)</label>
-              <input type="file" id="rep-foto" accept="image/*">
-            </div>
-          </div>
-
-          <div id="preview-container" style="margin-bottom: 1rem;" hidden>
-            <img id="preview-img" src="" alt="Vista previa" style="max-height: 160px; border-radius: 10px; border: 1px solid #cbd5e1;">
           </div>
 
           <div class="form-group">
-            <label for="rep-descripcion">Descripción y detalles importantes *</label>
-            <textarea id="rep-descripcion" rows="3" placeholder="Estado de salud, tamaño, color de collar o lo que necesita..." required></textarea>
+            <label for="rep-pin">Crea tu PIN de Autor (4 dígitos para editar/cerrar luego) *</label>
+            <input type="password" id="rep-pin" maxlength="4" inputmode="numeric" placeholder="Ej: 4589" required>
           </div>
 
-          <p class="form-error" id="rep-error" hidden>⚠️ Completa todos los campos obligatorios y verifica que tu PIN tenga exactamente 4 números.</p>
+          <div class="form-group">
+            <label for="rep-descripcion">Detalles del caso (edad, salud, carácter) *</label>
+            <textarea id="rep-descripcion" rows="3" placeholder="Describe el estado de la mascota y qué tipo de ayuda necesita..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="rep-foto">Fotografía de la mascota (Opcional — usa imagen plantilla si se deja vacío)</label>
+            <input type="file" id="rep-foto" accept="image/*">
+            <div id="preview-container" class="img-preview-box" hidden>
+              <img id="preview-img" src="" alt="Vista previa">
+            </div>
+          </div>
+
+          <p class="form-error" id="rep-error" hidden>⚠️ Por favor completa todos los campos obligatorios y asegúrate de ingresar un PIN numérico de 4 dígitos.</p>
           <div class="contact-success" id="rep-exito" hidden></div>
 
-          <button type="submit" class="btn btn-primary btn-block btn-shine">🐾 Enviar Publicación a Revisión</button>
+          <button type="submit" class="btn btn-primary btn-block">🐾 Enviar Caso a Revisión</button>
         </form>
       </div>
     </section>
   </main>
 
   <!-- PIE DE PÁGINA -->
+  <div class="dog-strip" aria-hidden="true"><div class="dog-walker"><div id="lottie-walker"></div></div></div>
+
   <footer class="footer">
     <div class="container footer-grid">
       <div>
@@ -207,6 +195,7 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,1223 +1,1261 @@
 /* =========================================================
-   PATITAS SCZ — LÓGICA PRINCIPAL, MODERACIÓN Y ANIMACIONES
+   PATITAS SCZ — LÓGICA PRINCIPAL CON MODERACIÓN Y PIN
    ========================================================= */
 
-const STORAGE_KEY = 'patitas_scz_data_v1';
-const MOD_SESSION_KEY = 'patitas_scz_mod_active';
-const CLAVE_MODERADOR = '2026';
-
-const DATOS_RESPALDO = {
-  reportes: [
-    {
-      id: 201,
-      titulo: "Cachorro mestizo rescatado necesita hogar temporal urgente",
-      categoria: "rescate",
-      categoriaLabel: "Rescate y Urgencia",
-      zona: "Av. Banzer y 4to Anillo — Zona Norte",
-      contacto: "70012345 (Refugio Patitas)",
-      pin: "1234",
-      verificado: true,
-      aprobado: true,
-      urgencia: "critica",
-      estado: "En atención",
-      notaCierre: "",
-      fecha: "Hace 2 horas",
-      descripcion: "Cachorro de aproximadamente 3 meses rescatado con deshidratación leve. Ya recibió primera revisión veterinaria y necesita un hogar temporal por 15 días mientras completa su recuperación.",
-      imagen: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
-      apoyos: 42
-    },
-    {
-      id: 202,
-      titulo: "Canela (2 años) busca familia responsable en adopción",
-      categoria: "adopcion",
-      categoriaLabel: "En Adopción",
-      zona: "Barrio Equipetrol — Calle 6",
-      contacto: "75098765 (Voluntaria Sofía)",
-      pin: "1234",
-      verificado: false,
-      aprobado: true,
-      urgencia: "alta",
-      estado: "Buscando hogar",
-      notaCierre: "",
-      fecha: "Hace 5 horas",
-      descripcion: "Perrita mediana, muy dócil, esterilizada y con vacunas al día. Convive bien con niños y otros perros. Se entrega con seguimiento responsable.",
-      imagen: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
-      apoyos: 29
-    },
-    {
-      id: 203,
-      titulo: "SE BUSCA: Gatito atigrado perdido cerca del Parque Urbano",
-      categoria: "perdidos",
-      categoriaLabel: "Mascota Perdida",
-      zona: "Av. Argentina y 1er Anillo — Centro",
-      contacto: "76044321 (Familia Rojas)",
-      pin: "1234",
-      verificado: false,
-      aprobado: true,
-      urgencia: "critica",
-      estado: "Se busca",
-      notaCierre: "",
-      fecha: "Ayer",
-      descripcion: "Responde al nombre de 'Milo'. Llevaba collar azul con cascabel al momento de extraviarse por la noche. Cualquier dato o foto avisar de inmediato.",
-      imagen: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80",
-      apoyos: 64
-    },
-    {
-      id: 204,
-      titulo: "Refugio Esperanza requiere alimento balanceado y mantas",
-      categoria: "rescate",
-      categoriaLabel: "Rescate y Urgencia",
-      zona: "Zona Plan 3 Mil — Av. Principal",
-      contacto: "71055678 (Albergue Esperanza)",
-      pin: "1234",
-      verificado: true,
-      aprobado: true,
-      urgencia: "alta",
-      estado: "En atención",
-      notaCierre: "",
-      fecha: "Hace 1 día",
-      descripcion: "Actualmente albergamos 38 perros rescatados de calle. Necesitamos apoyo con croquetas para adultos y cachorros, periódicos y cobijas limpias.",
-      imagen: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80",
-      apoyos: 53
-    },
-    {
-      id: 205,
-      titulo: "Bruno ya fue adoptado tras su rehabilitación",
-      categoria: "adopcion",
-      categoriaLabel: "En Adopción",
-      zona: "Carretera al Norte — Km 9",
-      contacto: "72100998 (Red Patitas SCZ)",
-      pin: "1234",
-      verificado: true,
-      aprobado: true,
-      urgencia: "moderada",
-      estado: "Adoptado",
-      notaCierre: "Adoptado por la familia Méndez. Ya cuenta con su patio seguro y controles veterinarios al día.",
-      fecha: "Hace 2 días",
-      descripcion: "Gracias a la difusión ciudadana y el apoyo de la clínica aliada, Bruno completó su tratamiento dermatológico y ya vive con su nueva familia.",
-      imagen: "https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80",
-      apoyos: 87
-    },
-    {
-      id: 206,
-      titulo: "Dos gatitos rescatados listos para adopción conjunta o separada",
-      categoria: "adopcion",
-      categoriaLabel: "En Adopción",
-      zona: "Av. Santos Dumont — Zona Sur",
-      contacto: "72133445 (Hogar Temporal Luz)",
-      pin: "1234",
-      verificado: false,
-      aprobado: true,
-      urgencia: "moderada",
-      estado: "Buscando hogar",
-      notaCierre: "",
-      fecha: "Hace 3 días",
-      descripcion: "Tienen 2 meses, ya usan arenero y están desparasitados. Buscan hogares seguros con ventanas protegidas en Santa Cruz.",
-      imagen: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80",
-      apoyos: 36
-    }
-  ],
-  guias: [
-    {
-      id: 1,
-      tipo: "refugios",
-      badge: "Refugio y Acopio",
-      verificado: true,
-      titulo: "Albergue Solidario y Punto de Donación Norte",
-      lugar: "Av. Beni y 5to Anillo — Zona Norte",
-      horario: "Lunes a Sábado: 08:30 a 17:30",
-      detalle: "Recepción directa de alimento balanceado, medicamentos veterinarios, correas y mantas. Visitas coordinadas para adopción."
-    },
-    {
-      id: 2,
-      tipo: "campanas",
-      badge: "Campaña Veterinaria",
-      verificado: true,
-      titulo: "Esterilización a Bajo Costo y Desparasitación",
-      lugar: "Clínica Veterinaria Aliada — Av. Piraí",
-      horario: "Miércoles y Sábados: 08:00 a 14:00",
-      detalle: "Cupos solidarios para perros y gatos rescatados o de familias de escasos recursos. Incluye medicación postoperatoria."
-    },
-    {
-      id: 3,
-      tipo: "refugios",
-      badge: "Red de Hogares",
-      verificado: true,
-      titulo: "Centro de Tránsito Patitas del Sur",
-      lugar: "Av. Santos Dumont — Zona Sur",
-      horario: "Todos los días: 09:00 a 18:00",
-      detalle: "Coordinación de hogares temporales de emergencia para animales atropellados o abandonados mientras encuentran familia."
-    },
-    {
-      id: 4,
-      tipo: "campanas",
-      badge: "Vacunación Gratuita",
-      verificado: true,
-      titulo: "Jornada Antirrábica y Control Preventivo",
-      lugar: "Parque Urbano Central — Explanada Oeste",
-      horario: "Domingos: 08:30 a 13:00",
-      detalle: "Aplicación gratuita de vacuna antirrábica, entrega de cartilla sanitaria y orientación sobre tenencia responsable."
-    },
-    {
-      id: 5,
-      tipo: "refugios",
-      badge: "Acopio Solidario",
-      verificado: false,
-      titulo: "Punto Vecinal Mascotero — Zona Equipetrol",
-      lugar: "Av. San Martín — Barrio Equipetrol",
-      horario: "Lunes a Viernes: 09:00 a 19:00",
-      detalle: "Contenedor solidario para dejar bolsas de croquetas selladas, platos, camas y transportadoras en buen estado."
-    },
-    {
-      id: 6,
-      tipo: "campanas",
-      badge: "Atención de Emergencia",
-      verificado: true,
-      titulo: "Red de Veterinarios Voluntarios 24/7",
-      lugar: "Cobertura en toda Santa Cruz (Ciudad y alrededores)",
-      horario: "Atención de urgencias previa coordinación",
-      detalle: "Tarifa social para rescates viales comprobados reportados a través de la comunidad Patitas SCZ."
-    }
-  ],
-  chatbot: {
-    bienvenida: "¡Hola! Soy el Asistente de Patitas SCZ 🐾. ¿Cómo quieres ayudar hoy?",
-    opciones: [
-      {
-        id: "adoptar",
-        pregunta: "¿Cómo puedo adoptar o dar hogar temporal?",
-        respuesta: "Ingresa a 'Casos y Mascotas', abre la ficha del animalito y pulsa 'Contactar por WhatsApp' para hablar directo con el rescatista.",
-        accionTexto: "Ver mascotas en adopción",
-        accionDestino: "casos.html"
-      },
-      {
-        id: "verificado",
-        pregunta: "¿Cómo obtiene un refugio o clínica el sello verificado?",
-        respuesta: "Contáctanos en el formulario de la portada. Tras validar la institución, el equipo moderador activa su sello ✔ Aliado Verificado en la red.",
-        accionTexto: "Ir a formulario de contacto",
-        accionDestino: "index.html#contacto"
-      },
-      {
-        id: "pin",
-        pregunta: "¿Para qué sirve el PIN de 4 dígitos al publicar?",
-        respuesta: "Protege tu publicación para que solo tú (o un moderador) puedas editar los datos, eliminarla o marcarla como Sanado, Adoptado o Encontrado.",
-        accionTexto: "Publicar caso ahora",
-        accionDestino: "publicar.html"
-      },
-      {
-        id: "campanas",
-        pregunta: "¿Dónde hay campañas de esterilización o refugios?",
-        respuesta: "Revisa nuestro directorio con sello verificado para jornadas de esterilización solidaria, vacunas y acopio de alimento en toda Santa Cruz.",
-        accionTexto: "Ver refugios y campañas",
-        accionDestino: "refugios.html"
-      }
-    ]
+   const STORAGE_KEY = 'patitas_scz_data_v1';
+   const MOD_SESSION_KEY = 'patitas_scz_mod_active';
+   const CLAVE_MODERADOR = '2026';
+   
+   const DATOS_RESPALDO = {
+     reportes: [
+       {
+         id: 201,
+         titulo: "Cachorro mestizo rescatado necesita hogar temporal urgente",
+         categoria: "rescate",
+         categoriaLabel: "Rescate y Urgencia",
+         zona: "Av. Banzer y 4to Anillo — Zona Norte",
+         contacto: "70012345 (Refugio Patitas)",
+         pin: "1234",
+         verificado: true,
+         aprobado: true,
+         urgencia: "critica",
+         estado: "En atención",
+         notaCierre: "",
+         fecha: "Hace 2 horas",
+         descripcion: "Cachorro de aproximadamente 3 meses rescatado con deshidratación leve. Ya recibió primera revisión veterinaria y necesita un hogar temporal por 15 días mientras completa su recuperación.",
+         imagen: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
+         apoyos: 42
+       },
+       {
+         id: 202,
+         titulo: "Canela (2 años) busca familia responsable en adopción",
+         categoria: "adopcion",
+         categoriaLabel: "En Adopción",
+         zona: "Barrio Equipetrol — Calle 6",
+         contacto: "75098765 (Voluntaria Sofía)",
+         pin: "1234",
+         verificado: false,
+         aprobado: true,
+         urgencia: "alta",
+         estado: "Buscando hogar",
+         notaCierre: "",
+         fecha: "Hace 5 horas",
+         descripcion: "Perrita mediana, muy dócil, esterilizada y con vacunas al día. Convive bien con niños y otros perros. Se entrega con seguimiento responsable.",
+         imagen: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
+         apoyos: 29
+       },
+       {
+         id: 203,
+         titulo: "SE BUSCA: Gatito atigrado perdido cerca del Parque Urbano",
+         categoria: "perdidos",
+         categoriaLabel: "Mascota Perdida",
+         zona: "Av. Argentina y 1er Anillo — Centro",
+         contacto: "76044321 (Familia Rojas)",
+         pin: "1234",
+         verificado: false,
+         aprobado: true,
+         urgencia: "critica",
+         estado: "Se busca",
+         notaCierre: "",
+         fecha: "Ayer",
+         descripcion: "Responde al nombre de 'Milo'. Llevaba collar azul con cascabel al momento de extraviarse por la noche. Cualquier dato o foto avisar de inmediato.",
+         imagen: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80",
+         apoyos: 64
+       },
+       {
+         id: 204,
+         titulo: "Refugio Esperanza requiere alimento balanceado y mantas",
+         categoria: "rescate",
+         categoriaLabel: "Rescate y Urgencia",
+         zona: "Zona Plan 3 Mil — Av. Principal",
+         contacto: "71055678 (Albergue Esperanza)",
+         pin: "1234",
+         verificado: true,
+         aprobado: true,
+         urgencia: "alta",
+         estado: "En atención",
+         notaCierre: "",
+         fecha: "Hace 1 día",
+         descripcion: "Actualmente albergamos 38 perros rescatados de calle. Necesitamos apoyo con croquetas para adultos y cachorros, periódicos y cobijas limpias.",
+         imagen: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=800&q=80",
+         apoyos: 53
+       },
+       {
+         id: 205,
+         titulo: "Bruno ya fue adoptado tras su rehabilitación",
+         categoria: "adopcion",
+         categoriaLabel: "En Adopción",
+         zona: "Carretera al Norte — Km 9",
+         contacto: "72100998 (Red Patitas SCZ)",
+         pin: "1234",
+         verificado: true,
+         aprobado: true,
+         urgencia: "moderada",
+         estado: "Adoptado",
+         notaCierre: "Adoptado por la familia Méndez. Ya cuenta con su patio seguro y controles veterinarios al día.",
+         fecha: "Hace 2 días",
+         descripcion: "Gracias a la difusión ciudadana y el apoyo de la clínica aliada, Bruno completó su tratamiento dermatológico y ya vive con su nueva familia.",
+         imagen: "https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=800&q=80",
+         apoyos: 87
+       },
+       {
+         id: 206,
+         titulo: "Dos gatitos rescatados listos para adopción conjunta o separada",
+         categoria: "adopcion",
+         categoriaLabel: "En Adopción",
+         zona: "Av. Santos Dumont — Zona Sur",
+         contacto: "72133445 (Hogar Temporal Luz)",
+         pin: "1234",
+         verificado: false,
+         aprobado: true,
+         urgencia: "moderada",
+         estado: "Buscando hogar",
+         notaCierre: "",
+         fecha: "Hace 3 días",
+         descripcion: "Tienen 2 meses, ya usan arenero y están desparasitados. Buscan hogares seguros con ventanas protegidas en Santa Cruz.",
+         imagen: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80",
+         apoyos: 36
+       }
+     ],
+     guias: [
+       {
+         id: 1,
+         tipo: "refugios",
+         badge: "Refugio y Acopio",
+         verificado: true,
+         titulo: "Albergue Solidario y Punto de Donación Norte",
+         lugar: "Av. Beni y 5to Anillo — Zona Norte",
+         horario: "Lunes a Sábado: 08:30 a 17:30",
+         detalle: "Recepción directa de alimento balanceado, medicamentos veterinarios, correas y mantas. Visitas coordinadas para adopción."
+       },
+       {
+         id: 2,
+         tipo: "campanas",
+         badge: "Campaña Veterinaria",
+         verificado: true,
+         titulo: "Esterilización a Bajo Costo y Desparasitación",
+         lugar: "Clínica Veterinaria Aliada — Av. Piraí",
+         horario: "Miércoles y Sábados: 08:00 a 14:00",
+         detalle: "Cupos solidarios para perros y gatos rescatados o de familias de escasos recursos. Incluye medicación postoperatoria."
+       },
+       {
+         id: 3,
+         tipo: "refugios",
+         badge: "Red de Hogares",
+         verificado: true,
+         titulo: "Centro de Tránsito Patitas del Sur",
+         lugar: "Av. Santos Dumont — Zona Sur",
+         horario: "Todos los días: 09:00 a 18:00",
+         detalle: "Coordinación de hogares temporales de emergencia para animales atropellados o abandonados mientras encuentran familia."
+       },
+       {
+         id: 4,
+         tipo: "campanas",
+         badge: "Vacunación Gratuita",
+         verificado: true,
+         titulo: "Jornada Antirrábica y Control Preventivo",
+         lugar: "Parque Urbano Central — Explanada Oeste",
+         horario: "Domingos: 08:30 a 13:00",
+         detalle: "Aplicación gratuita de vacuna antirrábica, entrega de cartilla sanitaria y orientación sobre tenencia responsable."
+       },
+       {
+         id: 5,
+         tipo: "refugios",
+         badge: "Acopio Solidario",
+         verificado: false,
+         titulo: "Punto Vecinal Mascotero — Zona Equipetrol",
+         lugar: "Av. San Martín — Barrio Equipetrol",
+         horario: "Lunes a Viernes: 09:00 a 19:00",
+         detalle: "Contenedor solidario para dejar bolsas de croquetas selladas, platos, camas y transportadoras en buen estado."
+       },
+       {
+         id: 6,
+         tipo: "campanas",
+         badge: "Atención de Emergencia",
+         verificado: true,
+         titulo: "Red de Veterinarios Voluntarios 24/7",
+         lugar: "Cobertura en toda Santa Cruz (Ciudad y alrededores)",
+         horario: "Atención de urgencias previa coordinación",
+         detalle: "Tarifa social para rescates viales comprobados reportados a través de la comunidad Patitas SCZ."
+       }
+     ],
+     chatbot: {
+       bienvenida: "¡Hola! Soy el Asistente de Patitas SCZ 🐾. ¿Cómo quieres ayudar hoy?",
+       opciones: [
+         {
+           id: "adoptar",
+           pregunta: "¿Cómo puedo adoptar o dar hogar temporal?",
+           respuesta: "Ingresa a 'Casos y Mascotas', abre la ficha del animalito y pulsa 'Contactar por WhatsApp' para hablar directo con el rescatista.",
+           accionTexto: "Ver mascotas en adopción",
+           accionDestino: "casos.html"
+         },
+         {
+           id: "verificado",
+           pregunta: "¿Cómo obtiene un refugio o clínica el sello verificado?",
+           respuesta: "Contáctanos en el formulario de la portada. Tras validar la institución, el equipo moderador activa su sello ✔ Aliado Verificado en la red.",
+           accionTexto: "Ir a formulario de contacto",
+           accionDestino: "index.html#contacto"
+         },
+         {
+           id: "pin",
+           pregunta: "¿Para qué sirve el PIN de 4 dígitos al publicar?",
+           respuesta: "Protege tu publicación para que solo tú (o un moderador) puedas editar los datos, eliminarla o marcarla como Sanado, Adoptado o Encontrado.",
+           accionTexto: "Publicar caso ahora",
+           accionDestino: "publicar.html"
+         },
+         {
+           id: "campanas",
+           pregunta: "¿Dónde hay campañas de esterilización o refugios?",
+           respuesta: "Revisa nuestro directorio con sello verificado para jornadas de esterilización solidaria, vacunas y acopio de alimento en toda Santa Cruz.",
+           accionTexto: "Ver refugios y campañas",
+           accionDestino: "refugios.html"
+         }
+       ]
+     }
+   };
+   
+   const FALLBACK_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%23ccfbf1'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='28' font-weight='bold' fill='%230f766e'%3E🐾 Patitas SCZ — Foto de Plantilla%3C/text%3E%3C/svg%3E";
+   
+   const ESTADOS_FINALES = {
+     rescate: 'Sanado',
+     adopcion: 'Adoptado',
+     perdidos: 'Encontrado'
+   };
+   
+   function esCasoFallecido(estado) {
+    return estado === 'Cruzó el arcoíris';
   }
-};
 
-const FALLBACK_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%23ccfbf1'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='28' font-weight='bold' fill='%230f766e'%3E🐾 Patitas SCZ — Foto de Plantilla%3C/text%3E%3C/svg%3E";
+  function esCasoSinResolucion(estado) {
+    return estado === 'Caso cerrado';
+  }
 
-const ESTADOS_FINALES = {
-  rescate: 'Sanado',
-  adopcion: 'Adoptado',
-  perdidos: 'Encontrado'
-};
-
-function esCasoFinalizado(estado) {
-  return ['Sanado', 'Adoptado', 'Encontrado', 'Resuelto'].indexOf(estado) !== -1;
-}
-
-let appData = null;
-let reportesData = [];
-let filtroCategoriaActual = 'todos';
-let filtroUrgenciaActual = 'todas';
-let textoBusquedaActual = '';
-let ordenActual = 'recientes';
-let reporteSeleccionadoId = null;
-let accionPendientePin = null;
-
-function esModeradorActivo() {
-  return sessionStorage.getItem(MOD_SESSION_KEY) === 'true';
-}
+  function esCasoFinalizado(estado) {
+     return ['Sanado', 'Adoptado', 'Encontrado', 'Resuelto', 'Cruzó el arcoíris', 'Caso cerrado'].indexOf(estado) !== -1;
+   }
+   
+   let appData = null;
+   let reportesData = [];
+   let filtroCategoriaActual = 'todos';
+   let filtroUrgenciaActual = 'todas';
+   let textoBusquedaActual = '';
+   let ordenActual = 'recientes';
+   let reporteSeleccionadoId = null;
+   let accionPendientePin = null;
+   
+   function esModeradorActivo() {
+     return sessionStorage.getItem(MOD_SESSION_KEY) === 'true';
+   }
+   
+   /* =========================================================
+      1. INICIALIZACIÓN Y CARGA DE DATOS
+      ========================================================= */
+   document.addEventListener('DOMContentLoaded', async function() {
+     await cargarDatos();
+     inicializarMenuMovil();
+     actualizarEstadisticasPortada();
+     renderizarDestacadosPortada();
+     inicializarCasosPage();
+     inicializarDirectorioPage();
+     inicializarFormularioPublicar();
+     inicializarFormularioContacto();
+     inicializarVisorJSON();
+     inicializarChatbot();
+   });
+   
+   async function cargarDatos() {
+     const guardadoLocal = localStorage.getItem(STORAGE_KEY);
+     if (guardadoLocal) {
+       try {
+         appData = JSON.parse(guardadoLocal);
+         reportesData = appData.reportes || [];
+         return;
+       } catch (e) {
+         localStorage.removeItem(STORAGE_KEY);
+       }
+     }
+   
+     try {
+       const respuesta = await fetch('datos.json');
+       if (!respuesta.ok) throw new Error('No se pudo leer datos.json');
+       appData = await respuesta.json();
+     } catch (error) {
+       appData = JSON.parse(JSON.stringify(DATOS_RESPALDO));
+     }
+   
+     reportesData = appData.reportes || [];
+     guardarColeccionEnLocal();
+   }
+   
+   function guardarColeccionEnLocal() {
+     if (!appData) return;
+     appData.reportes = reportesData;
+     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+   }
+   
+   /* =========================================================
+      2. NAVEGACIÓN MÓVIL
+      ========================================================= */
+   function inicializarMenuMovil() {
+     const toggle = document.getElementById('nav-toggle');
+     const menu = document.getElementById('nav-menu');
+     if (!toggle || !menu) return;
+   
+     toggle.addEventListener('click', function() {
+       menu.classList.toggle('open');
+     });
+   }
+   
+   /* =========================================================
+      3. PORTADA: ESTADÍSTICAS Y CASOS DESTACADOS
+      ========================================================= */
+   function actualizarEstadisticasPortada() {
+     const totalEl = document.getElementById('stat-total');
+     const urgentesEl = document.getElementById('stat-urgentes');
+     const resueltosEl = document.getElementById('stat-resueltos');
+   
+     if (!totalEl) return;
+   
+     const aprobados = reportesData.filter(function(r) { return r.aprobado !== false; });
+     const total = aprobados.length;
+     const cerrados = aprobados.filter(function(r) { return esCasoFinalizado(r.estado); }).length;
+     const resueltos = aprobados.filter(function(r) { return esCasoFinalizado(r.estado) && !esCasoFallecido(r.estado) && !esCasoSinResolucion(r.estado); }).length;
+     const activos = total - cerrados;
+   
+     totalEl.textContent = total;
+     urgentesEl.textContent = activos;
+     resueltosEl.textContent = resueltos;
+   }
+   
+   function renderizarDestacadosPortada() {
+     const contenedor = document.getElementById('contenedor-destacados');
+     if (!contenedor) return;
+   
+     const aprobados = reportesData.filter(function(r) { return r.aprobado !== false; });
+     const destacados = aprobados.slice(0, 3);
+   
+     contenedor.innerHTML = destacados
+       .map(function(item, index) {
+         const finalizado = esCasoFinalizado(item.estado);
+         return `
+         <article class="report-card${finalizado ? (esCasoFallecido(item.estado) ? ' is-memorial' : esCasoSinResolucion(item.estado) ? ' is-neutral-closed' : ' is-celebrating') : ''}" style="animation-delay: ${index * 0.08}s">
+           <div class="card-img-box">${finalizado ? (esCasoFallecido(item.estado) ? '<span class="memorial-ribbon">🌈 En memoria</span>' : esCasoSinResolucion(item.estado) ? '<span class="memorial-ribbon neutral-ribbon">🤍 Caso cerrado</span>' : '<span class="happy-ribbon">🎉 ¡Final feliz!</span>') : ''}
+             <img src="${item.imagen}" alt="${item.titulo}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';">
+             <span class="badge-urgencia urg-${item.urgencia}">${item.urgencia}</span>
+           </div>
+           <div class="card-body">
+             <div class="card-category-row">
+               <span class="card-category">${item.categoriaLabel}</span>
+               ${item.verificado ? '<span class="verified-seal">✔ Aliado Verificado</span>' : ''}
+             </div>
+             <h3 class="card-title">${item.titulo}</h3>
+             <p class="card-zone">📍 ${item.zona} • <small>${item.fecha}</small></p>
+             <p class="card-desc">${item.descripcion}</p>
+             ${item.notaCierre ? `<div class="card-closing-note">${esCasoFallecido(item.estado) ? '🌈' : esCasoSinResolucion(item.estado) ? '🤍' : '🎉'} ${item.notaCierre}</div>` : ''}
+             <div class="card-footer">
+               <span class="status-tag ${finalizado ? (esCasoFallecido(item.estado) || esCasoSinResolucion(item.estado) ? 'is-resolved is-memorial-tag' : 'is-resolved') : ''}">
+                 ${finalizado ? (esCasoFallecido(item.estado) ? '🌈' : esCasoSinResolucion(item.estado) ? '🤍' : '✔') : '🐾'} ${item.estado} • 🤝 ${item.apoyos}
+               </span>
+               <a href="casos.html" class="btn-detail" target="_blank" rel="noopener">Ver en red →</a>
+             </div>
+           </div>
+         </article>
+       `;
+       })
+       .join('');
+   }
+   
+   /* =========================================================
+      4. PÁGINA CASOS Y MASCOTAS (MODERACIÓN + PIN + WHATSAPP + CRUD)
+      ========================================================= */
+   function inicializarCasosPage() {
+     const contenedor = document.getElementById('contenedor-reportes');
+     if (!contenedor) return;
+   
+     actualizarUIModerador();
+     renderizarCasos();
+   
+     const btnMod = document.getElementById('btn-toggle-moderador');
+     const modalMod = document.getElementById('modal-moderador');
+     const formMod = document.getElementById('form-login-moderador');
+   
+     btnMod.addEventListener('click', function() {
+       if (esModeradorActivo()) {
+         sessionStorage.removeItem(MOD_SESSION_KEY);
+         actualizarUIModerador();
+         renderizarCasos();
+       } else {
+         document.getElementById('mod-login-error').hidden = true;
+         document.getElementById('input-clave-mod').value = '';
+         modalMod.hidden = false;
+       }
+     });
+   
+     document.getElementById('modal-mod-close').addEventListener('click', function() {
+       modalMod.hidden = true;
+     });
+   
+     formMod.addEventListener('submit', function(e) {
+       e.preventDefault();
+       const clave = document.getElementById('input-clave-mod').value.trim();
+       if (clave === CLAVE_MODERADOR) {
+         sessionStorage.setItem(MOD_SESSION_KEY, 'true');
+         modalMod.hidden = true;
+         actualizarUIModerador();
+         renderizarCasos();
+       } else {
+         document.getElementById('mod-login-error').hidden = false;
+       }
+     });
+   
+     document.getElementById('btn-salir-moderador').addEventListener('click', function() {
+       sessionStorage.removeItem(MOD_SESSION_KEY);
+       actualizarUIModerador();
+       renderizarCasos();
+     });
+   
+     document.getElementById('filter-buttons').addEventListener('click', function(e) {
+       if (e.target.classList.contains('filter-btn')) {
+         document.querySelectorAll('#filter-buttons .filter-btn').forEach(function(b) {
+           b.classList.remove('active');
+         });
+         e.target.classList.add('active');
+         filtroCategoriaActual = e.target.dataset.categoria;
+         renderizarCasos();
+       }
+     });
+   
+     document.getElementById('buscador-reportes').addEventListener('input', function(e) {
+       textoBusquedaActual = e.target.value.trim().toLowerCase();
+       renderizarCasos();
+     });
+   
+     document.getElementById('filtro-urgencia').addEventListener('change', function(e) {
+       filtroUrgenciaActual = e.target.value;
+       renderizarCasos();
+     });
+   
+     document.getElementById('ordenar-reportes').addEventListener('change', function(e) {
+       ordenActual = e.target.value;
+       renderizarCasos();
+     });
+   
+     contenedor.addEventListener('click', function(e) {
+       const boton = e.target.closest('.btn-detail');
+       if (boton) {
+         abrirModalDetalle(Number(boton.dataset.id));
+       }
+     });
+   
+     const modalOverlay = document.getElementById('modal-detalle');
+     document.getElementById('modal-close').addEventListener('click', function() {
+       modalOverlay.hidden = true;
+     });
+   
+     modalOverlay.addEventListener('click', function(e) {
+       if (e.target === modalOverlay) modalOverlay.hidden = true;
+     });
+   
+     document.getElementById('btn-apoyar-modal').addEventListener('click', function() {
+       const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
+       if (caso) {
+         caso.apoyos += 1;
+         guardarColeccionEnLocal();
+         document.getElementById('modal-apoyos').textContent = caso.apoyos;
+         renderizarCasos();
+       }
+     });
+   
+     // Aprobar publicación pendiente (Solo Moderador)
+     document.getElementById('btn-aprobar-modal').addEventListener('click', function() {
+       const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
+       if (caso && esModeradorActivo()) {
+         caso.aprobado = true;
+         guardarColeccionEnLocal();
+         actualizarUIModerador();
+         renderizarCasos();
+         abrirModalDetalle(caso.id);
+       }
+     });
+   
+     // Otorgar o quitar sello Verificado internamente (Solo Moderador)
+     document.getElementById('btn-verificar-modal').addEventListener('click', function() {
+       const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
+       if (caso && esModeradorActivo()) {
+         caso.verificado = !caso.verificado;
+         guardarColeccionEnLocal();
+         renderizarCasos();
+         abrirModalDetalle(caso.id);
+       }
+     });
+   
+     document.getElementById('btn-resolver-modal').addEventListener('click', function() {
+       solicitarVerificacionPin('cerrar');
+     });
+   
+     document.getElementById('btn-editar-modal').addEventListener('click', function() {
+       solicitarVerificacionPin('editar');
+     });
+   
+     document.getElementById('btn-eliminar-modal').addEventListener('click', function() {
+       solicitarVerificacionPin('eliminar');
+     });
+   
+     document.getElementById('btn-confirmar-pin').addEventListener('click', function() {
+       const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
+       if (!caso) return;
+   
+       const pinIngresado = document.getElementById('input-pin-autor').value.trim();
+       if (pinIngresado === (caso.pin || '1234')) {
+         document.getElementById('modal-pin-box').hidden = true;
+         ejecutarAccionProtegida(accionPendientePin);
+       } else {
+         document.getElementById('pin-error-msg').hidden = false;
+       }
+     });
+   
+     document.getElementById('btn-cancelar-pin').addEventListener('click', function() {
+       document.getElementById('modal-pin-box').hidden = true;
+       accionPendientePin = null;
+     });
+   
+     document.getElementById('btn-confirmar-cierre').addEventListener('click', function() {
+       const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
+       if (!caso) return;
+   
+       const resultadoSel = document.getElementById('select-resultado-cierre');
+       const nuevoEstado = (resultadoSel && resultadoSel.value === 'fallecio') ? 'Cruzó el arcoíris' : (resultadoSel && resultadoSel.value === 'sin_resolucion') ? 'Caso cerrado' : (ESTADOS_FINALES[caso.categoria] || 'Sanado');
+       const nota = document.getElementById('input-nota-cierre').value.trim();
+   
+       caso.estado = nuevoEstado;
+       if (nota) caso.notaCierre = nota;
+   
+       guardarColeccionEnLocal();
+       document.getElementById('modal-cierre-box').hidden = true;
+       renderizarCasos();
+       abrirModalDetalle(caso.id);
+     });
+   
+     document.getElementById('btn-cancelar-cierre').addEventListener('click', function() {
+       document.getElementById('modal-cierre-box').hidden = true;
+     });
+   
+     const vistaNormal = document.getElementById('modal-vista-normal');
+     const formEditar = document.getElementById('form-editar-reporte');
+   
+     document.getElementById('btn-cancelar-edicion').addEventListener('click', function() {
+       formEditar.hidden = true;
+       vistaNormal.hidden = false;
+     });
+   
+     formEditar.addEventListener('submit', function(e) {
+       e.preventDefault();
+       const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
+       if (!caso) return;
+   
+       const etiquetas = {
+         rescate: 'Rescate y Urgencia',
+         adopcion: 'En Adopción',
+         perdidos: 'Mascota Perdida'
+       };
+   
+       caso.titulo = document.getElementById('edit-titulo').value.trim();
+       caso.categoria = document.getElementById('edit-categoria').value;
+       caso.categoriaLabel = etiquetas[caso.categoria];
+       caso.urgencia = document.getElementById('edit-urgencia').value;
+       caso.zona = document.getElementById('edit-zona').value.trim();
+       caso.estado = document.getElementById('edit-estado').value;
+       caso.contacto = document.getElementById('edit-contacto').value.trim();
+       caso.descripcion = document.getElementById('edit-descripcion').value.trim();
+   
+       if (esModeradorActivo()) {
+         caso.verificado = document.getElementById('edit-verificado').checked;
+       }
+   
+       guardarColeccionEnLocal();
+       renderizarCasos();
+       abrirModalDetalle(caso.id);
+     });
+   }
+   
+   function actualizarUIModerador() {
+    const btnMod = document.getElementById('btn-toggle-moderador');
+    const statusBar = document.getElementById('mod-status-bar');
+    if (!btnMod) return;
+  
+    const pendientesCount = reportesData.filter(function(r) { return r.aprobado === false; }).length;
+    const badgeHTML = pendientesCount > 0
+      ? `<span class="mod-count">${pendientesCount} pendiente${pendientesCount > 1 ? 's' : ''}</span>`
+      : '';
+  
+    if (esModeradorActivo()) {
+      if (statusBar) statusBar.hidden = false;
+      btnMod.innerHTML = `🛡️ Moderador Activo ${badgeHTML}`;
+    } else {
+      if (statusBar) statusBar.hidden = true;
+      btnMod.innerHTML = `🛡️ Modo Moderador ${badgeHTML}`;
+    }
+  }
+   function solicitarVerificacionPin(accion) {
+     accionPendientePin = accion;
+     document.getElementById('modal-cierre-box').hidden = true;
+   
+     if (esModeradorActivo()) {
+       ejecutarAccionProtegida(accion);
+       return;
+     }
+   
+     document.getElementById('input-pin-autor').value = '';
+     document.getElementById('pin-error-msg').hidden = true;
+     document.getElementById('modal-pin-box').hidden = false;
+     document.getElementById('input-pin-autor').focus();
+   }
+   
+   function ejecutarAccionProtegida(accion) {
+     const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
+     if (!caso) return;
+   
+     if (accion === 'cerrar') {
+       const estadoObjetivo = ESTADOS_FINALES[caso.categoria] || 'Sanado';
+       document.getElementById('cierre-box-titulo').textContent = '📌 Cerrar caso';
+       const resultadoSel = document.getElementById('select-resultado-cierre');
+       resultadoSel.options[0].textContent = `🎉 Final feliz (${estadoObjetivo})`;
+       resultadoSel.value = (caso.estado === 'Cruzó el arcoíris') ? 'fallecio' : (caso.estado === 'Caso cerrado') ? 'sin_resolucion' : 'feliz';
+       document.getElementById('input-nota-cierre').value = caso.notaCierre || '';
+       document.getElementById('modal-cierre-box').hidden = false;
+       document.getElementById('input-nota-cierre').focus();
+     } else if (accion === 'editar') {
+       document.getElementById('edit-titulo').value = caso.titulo;
+       document.getElementById('edit-categoria').value = caso.categoria;
+       document.getElementById('edit-urgencia').value = caso.urgencia;
+       document.getElementById('edit-zona').value = caso.zona;
+       document.getElementById('edit-estado').value = caso.estado;
+       document.getElementById('edit-contacto').value = caso.contacto || '';
+       document.getElementById('edit-descripcion').value = caso.descripcion;
+   
+       const grupoVerificado = document.getElementById('grupo-edit-verificado');
+       if (grupoVerificado) {
+         grupoVerificado.hidden = !esModeradorActivo();
+         document.getElementById('edit-verificado').checked = Boolean(caso.verificado);
+       }
+   
+       document.getElementById('modal-vista-normal').hidden = true;
+       document.getElementById('form-editar-reporte').hidden = false;
+     } else if (accion === 'eliminar') {
+       if (!confirm('¿Estás seguro de eliminar definitivamente esta ficha?')) return;
+       reportesData = reportesData.filter(function(r) { return r.id !== reporteSeleccionadoId; });
+       guardarColeccionEnLocal();
+       document.getElementById('modal-detalle').hidden = true;
+       actualizarUIModerador();
+       renderizarCasos();
+     }
+   }
+   
+   function renderizarCasos() {
+     const contenedor = document.getElementById('contenedor-reportes');
+     if (!contenedor) return;
+   
+     const modActivo = esModeradorActivo();
+   
+     const filtrados = reportesData.filter(function(item) {
+       if (!modActivo && item.aprobado === false) return false;
+   
+       const okCat = filtroCategoriaActual === 'todos' || item.categoria === filtroCategoriaActual;
+       const okUrg = filtroUrgenciaActual === 'todas' || item.urgencia === filtroUrgenciaActual;
+       const okTxt =
+         item.titulo.toLowerCase().includes(textoBusquedaActual) ||
+         item.zona.toLowerCase().includes(textoBusquedaActual) ||
+         item.descripcion.toLowerCase().includes(textoBusquedaActual);
+       return okCat && okUrg && okTxt;
+     });
+   
+     const pesos = { critica: 3, alta: 2, moderada: 1 };
+     const ordenados = filtrados.slice().sort(function(a, b) {
+       if (modActivo && a.aprobado !== b.aprobado) {
+         return a.aprobado === false ? -1 : 1;
+       }
+       if (ordenActual === 'importancia') return (pesos[b.urgencia] || 0) - (pesos[a.urgencia] || 0);
+       if (ordenActual === 'alfabetico') return a.titulo.localeCompare(b.titulo, 'es', { sensitivity: 'base' });
+       if (ordenActual === 'apoyos') return b.apoyos - a.apoyos;
+       return 0;
+     });
+   
+     if (ordenados.length === 0) {
+       contenedor.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#64748b; padding:2rem;">No se encontraron casos con esos filtros.</p>`;
+       return;
+     }
+   
+     contenedor.innerHTML = ordenados
+       .map(function(item, index) {
+         const finalizado = esCasoFinalizado(item.estado);
+         const pendiente = item.aprobado === false;
+   
+         return `
+         <article class="report-card ${pendiente ? 'is-pending-card' : ''}${finalizado ? (esCasoFallecido(item.estado) ? ' is-memorial' : esCasoSinResolucion(item.estado) ? ' is-neutral-closed' : ' is-celebrating') : ''}" style="animation-delay: ${index * 0.06}s">
+           <div class="card-img-box">${finalizado ? (esCasoFallecido(item.estado) ? '<span class="memorial-ribbon">🌈 En memoria</span>' : esCasoSinResolucion(item.estado) ? '<span class="memorial-ribbon neutral-ribbon">🤍 Caso cerrado</span>' : '<span class="happy-ribbon">🎉 ¡Final feliz!</span>') : ''}
+             <img src="${item.imagen}" alt="${item.titulo}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';">
+             ${pendiente ? '<span class="badge-pending-overlay">⏳ Pendiente de revisión</span>' : ''}
+             <span class="badge-urgencia urg-${item.urgencia}">${item.urgencia}</span>
+           </div>
+           <div class="card-body">
+             <div class="card-category-row">
+               <span class="card-category">${item.categoriaLabel}</span>
+               ${item.verificado ? '<span class="verified-seal">✔ Aliado Verificado</span>' : ''}
+             </div>
+             <h3 class="card-title">${item.titulo}</h3>
+             <p class="card-zone">📍 ${item.zona} • <small>${item.fecha}</small></p>
+             <p class="card-desc">${item.descripcion}</p>
+             ${item.notaCierre ? `<div class="card-closing-note">${esCasoFallecido(item.estado) ? '🌈' : esCasoSinResolucion(item.estado) ? '🤍' : '🎉'} ${item.notaCierre}</div>` : ''}
+             <div class="card-footer">
+               <span class="status-tag ${finalizado ? (esCasoFallecido(item.estado) || esCasoSinResolucion(item.estado) ? 'is-resolved is-memorial-tag' : 'is-resolved') : ''}">
+                 ${finalizado ? (esCasoFallecido(item.estado) ? '🌈' : esCasoSinResolucion(item.estado) ? '🤍' : '✔') : '🐾'} ${item.estado} • 🤝 ${item.apoyos}
+               </span>
+               <button type="button" class="btn-detail" data-id="${item.id}">Ver ficha →</button>
+             </div>
+           </div>
+         </article>
+       `;
+       })
+       .join('');
+   }
+   
+   function abrirModalDetalle(id) {
+     const caso = reportesData.find(function(r) { return r.id === id; });
+     if (!caso) return;
+   
+     reporteSeleccionadoId = id;
+     document.getElementById('modal-vista-normal').hidden = false;
+     document.getElementById('form-editar-reporte').hidden = true;
+     document.getElementById('modal-pin-box').hidden = true;
+     document.getElementById('modal-cierre-box').hidden = true;
+   
+     const modalImg = document.getElementById('modal-img');
+     modalImg.onerror = function() {
+       modalImg.onerror = null;
+       modalImg.src = FALLBACK_SVG;
+     };
+     modalImg.src = caso.imagen;
+   
+     document.getElementById('modal-categoria').textContent = caso.categoriaLabel;
+     document.getElementById('modal-urgencia').textContent = `Urgencia ${caso.urgencia}`;
+     document.getElementById('modal-estado-badge').textContent = caso.aprobado === false ? '⏳ Pendiente de aprobación' : `Estado: ${caso.estado}`;
+   
+     const verificadoBadge = document.getElementById('modal-verificado-badge');
+     if (verificadoBadge) {
+       verificadoBadge.hidden = !caso.verificado;
+     }
+   
+     document.getElementById('modal-titulo').textContent = caso.titulo;
+     document.getElementById('modal-zona').textContent = caso.zona;
+     document.getElementById('modal-fecha').textContent = caso.fecha;
+     document.getElementById('modal-contacto').textContent = caso.contacto || 'Coordinación vía Patitas SCZ';
+     document.getElementById('modal-descripcion').textContent = caso.descripcion;
+     document.getElementById('modal-apoyos').textContent = caso.apoyos;
+   
+     const notaBox = document.getElementById('modal-nota-cierre-box');
+     if (caso.notaCierre) {
+       notaBox.textContent = (esCasoFallecido(caso.estado) ? '🌈 En memoria: ' : esCasoSinResolucion(caso.estado) ? '🤍 Cierre: ' : '🎉 Final Feliz: ') + caso.notaCierre;
+       notaBox.hidden = false;
+     } else {
+       notaBox.hidden = true;
+     }
+   
+     const soloDigitos = (caso.contacto || '').replace(/\D/g, '');
+     const telefonoWA = soloDigitos.length === 8 ? `591${soloDigitos}` : (soloDigitos || '59170000000');
+     const mensajeWA = encodeURIComponent(`Hola, vi el caso "${caso.titulo}" en Patitas SCZ y me gustaría ayudar.`);
+     document.getElementById('btn-whatsapp-modal').href = `https://wa.me/${telefonoWA}?text=${mensajeWA}`;
+   
+     const modActivo = esModeradorActivo();
+   
+     const btnAprobar = document.getElementById('btn-aprobar-modal');
+     btnAprobar.hidden = !(modActivo && caso.aprobado === false);
+   
+     const btnVerificar = document.getElementById('btn-verificar-modal');
+     if (btnVerificar) {
+       btnVerificar.hidden = !modActivo;
+       btnVerificar.textContent = caso.verificado ? '✖ Quitar Verificado' : '✔ Dar Check Verificado';
+     }
+   
+     const btnResolver = document.getElementById('btn-resolver-modal');
+     const estadoObjetivo = ESTADOS_FINALES[caso.categoria] || 'Sanado';
+   
+     if (esCasoFinalizado(caso.estado)) {
+       btnResolver.textContent = esCasoFallecido(caso.estado) ? '🌈 Caso cerrado (en memoria)' : esCasoSinResolucion(caso.estado) ? '🤍 Caso cerrado' : `✅ Caso ${caso.estado}`;
+       btnResolver.disabled = true;
+     } else {
+       btnResolver.textContent = '✔ Cerrar caso';
+       btnResolver.disabled = false;
+     }
+   
+     document.getElementById('modal-detalle').hidden = false;
+   }
+   
+   /* =========================================================
+      5. DIRECTORIO DE REFUGIOS Y CAMPAÑAS (refugios.html)
+      ========================================================= */
+   function inicializarDirectorioPage() {
+     const contenedor = document.getElementById('contenedor-guias');
+     if (!contenedor || !appData) return;
+   
+     const renderGuias = function(tipo) {
+       const tipoFiltro = tipo || 'todos';
+       const lista = tipoFiltro === 'todos' ? appData.guias : appData.guias.filter(function(g) { return g.tipo === tipoFiltro; });
+       contenedor.innerHTML = lista
+         .map(function(g) {
+           return `
+           <article class="guide-card">
+             <div class="guide-top-badges">
+               <span class="guide-badge">${g.badge}</span>
+               ${g.verificado ? '<span class="verified-seal">✔ Aliado Verificado</span>' : ''}
+             </div>
+             <h3>${g.titulo}</h3>
+             <p class="guide-meta">📍 <strong>Ubicación:</strong> ${g.lugar}</p>
+             <p class="guide-meta">🕒 <strong>Horario:</strong> ${g.horario}</p>
+             <p class="guide-detail">${g.detalle}</p>
+           </article>
+         `;
+         })
+         .join('');
+     };
+   
+     renderGuias('todos');
+   
+     const btns = document.getElementById('guias-filter-buttons');
+     if (btns) {
+       btns.addEventListener('click', function(e) {
+         if (e.target.classList.contains('filter-btn')) {
+           document.querySelectorAll('#guias-filter-buttons .filter-btn').forEach(function(b) {
+             b.classList.remove('active');
+           });
+           e.target.classList.add('active');
+           renderGuias(e.target.dataset.tipo);
+         }
+       });
+     }
+   }
+   
+   /* =========================================================
+      6. FORMULARIO PUBLICAR CASO CON PIN DE AUTOR (publicar.html)
+      ========================================================= */
+   function inicializarFormularioPublicar() {
+     const form = document.getElementById('form-reporte');
+     if (!form) return;
+   
+     const inputFoto = document.getElementById('rep-foto');
+     const previewBox = document.getElementById('preview-container');
+     const previewImg = document.getElementById('preview-img');
+     let imagenBase64 = '';
+   
+     inputFoto.addEventListener('change', function(e) {
+       const file = e.target.files[0];
+       if (!file) {
+         imagenBase64 = '';
+         previewBox.hidden = true;
+         return;
+       }
+       const reader = new FileReader();
+       reader.onload = function(ev) {
+         imagenBase64 = ev.target.result;
+         previewImg.src = imagenBase64;
+         previewBox.hidden = false;
+       };
+       reader.readAsDataURL(file);
+     });
+   
+     form.addEventListener('submit', function(e) {
+       e.preventDefault();
+   
+       const titulo = document.getElementById('rep-titulo').value.trim();
+       const categoria = document.getElementById('rep-categoria').value;
+       const urgencia = document.getElementById('rep-urgencia').value;
+       const zona = document.getElementById('rep-zona').value.trim();
+       const contacto = document.getElementById('rep-contacto').value.trim();
+       const pin = document.getElementById('rep-pin').value.trim();
+       const descripcion = document.getElementById('rep-descripcion').value.trim();
+       const errorEl = document.getElementById('rep-error');
+       const exitoEl = document.getElementById('rep-exito');
+   
+       const pinValido = /^\d{4}$/.test(pin);
+   
+       if (!titulo || !categoria || !zona || !contacto || !pinValido || !descripcion) {
+         exitoEl.hidden = true;
+         errorEl.hidden = false;
+         return;
+       }
+   
+       errorEl.hidden = true;
+   
+       const etiquetas = {
+         rescate: 'Rescate y Urgencia',
+         adopcion: 'En Adopción',
+         perdidos: 'Mascota Perdida'
+       };
+   
+       const estadosIniciales = {
+         rescate: 'En atención',
+         adopcion: 'Buscando hogar',
+         perdidos: 'Se busca'
+       };
+   
+       const nuevoCaso = {
+         id: Date.now(),
+         titulo: titulo,
+         categoria: categoria,
+         categoriaLabel: etiquetas[categoria],
+         zona: zona,
+         contacto: contacto,
+         pin: pin,
+         verificado: false,
+         aprobado: false,
+         urgencia: urgencia,
+         estado: estadosIniciales[categoria],
+         notaCierre: '',
+         fecha: 'Hace un momento',
+         descripcion: descripcion,
+         imagen: imagenBase64 || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80',
+         apoyos: 1
+       };
+   
+       reportesData.unshift(nuevoCaso);
+       guardarColeccionEnLocal();
+   
+       exitoEl.textContent = `✅ ¡Caso enviado a revisión! Activa el Modo Moderador (clave 2026) en "Casos y Mascotas" para aprobarlo y otorgar verificación si corresponde. Tu PIN de autor es ${pin}.`;
+       exitoEl.hidden = false;
+       form.reset();
+       previewBox.hidden = true;
+   
+       setTimeout(function() {
+         window.location.href = 'casos.html';
+       }, 2200);
+     });
+   }
+   
+   /* =========================================================
+      7. FORMULARIO DE CONTACTO / ALIANZAS (index.html)
+      ========================================================= */
+   function inicializarFormularioContacto() {
+     const formContacto = document.getElementById('form-contacto');
+     if (!formContacto) return;
+   
+     formContacto.addEventListener('submit', function(e) {
+       e.preventDefault();
+   
+       const nombre = document.getElementById('contacto-nombre').value.trim();
+       const contactoDato = document.getElementById('contacto-email').value.trim();
+       const asunto = document.getElementById('contacto-asunto').value;
+       const mensaje = document.getElementById('contacto-mensaje').value.trim();
+       const errorEl = document.getElementById('contacto-error');
+       const exitoEl = document.getElementById('contacto-exito');
+   
+       const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactoDato);
+       const soloNumeros = contactoDato.replace(/[\s\-\+\(\)]/g, '');
+       const telefonoValido = /^\d{7,15}$/.test(soloNumeros);
+   
+       if (!nombre || (!emailValido && !telefonoValido) || !asunto || !mensaje) {
+         exitoEl.hidden = true;
+         errorEl.hidden = false;
+         return;
+       }
+   
+       errorEl.hidden = true;
+       exitoEl.textContent = `✅ ¡Gracias, ${nombre}! Recibimos tu solicitud para la red Patitas SCZ. Te contactaremos pronto a ${contactoDato}.`;
+       exitoEl.hidden = false;
+       formContacto.reset();
+     });
+   }
+   
+   /* =========================================================
+      8. VISOR JSON EN VIVO Y CHATBOT ASISTENTE
+      ========================================================= */
+   function inicializarVisorJSON() {
+     const btnVer = document.getElementById('btn-ver-json');
+     const modalJson = document.getElementById('modal-json');
+     const btnCerrar = document.getElementById('modal-json-close');
+     const btnReset = document.getElementById('btn-reset-json');
+     const viewer = document.getElementById('json-viewer-content');
+   
+     if (!btnVer || !modalJson) return;
+   
+     btnVer.addEventListener('click', function() {
+       viewer.textContent = JSON.stringify(appData, null, 2);
+       modalJson.hidden = false;
+     });
+   
+     btnCerrar.addEventListener('click', function() {
+       modalJson.hidden = true;
+     });
+   
+     btnReset.addEventListener('click', function() {
+       localStorage.removeItem(STORAGE_KEY);
+       sessionStorage.removeItem(MOD_SESSION_KEY);
+       location.reload();
+     });
+   }
+   
+   function inicializarChatbot() {
+     const toggle = document.getElementById('chatbot-toggle');
+     const win = document.getElementById('chatbot-window');
+     const closeBtn = document.getElementById('chatbot-close');
+     const messages = document.getElementById('chatbot-messages');
+     const options = document.getElementById('chatbot-options');
+   
+     if (!toggle || !win || !appData || !appData.chatbot) return;
+   
+     toggle.addEventListener('click', function() {
+       win.hidden = !win.hidden;
+     });
+   
+     closeBtn.addEventListener('click', function() {
+       win.hidden = true;
+     });
+   
+     messages.innerHTML = `<div class="chat-msg">${appData.chatbot.bienvenida}</div>`;
+   
+     options.innerHTML = appData.chatbot.opciones
+       .map(function(op) {
+         return `<button type="button" class="chat-opt-btn" data-id="${op.id}">${op.pregunta}</button>`;
+       })
+       .join('');
+   
+     options.addEventListener('click', function(e) {
+       if (!e.target.classList.contains('chat-opt-btn')) return;
+       const op = appData.chatbot.opciones.find(function(o) { return o.id === e.target.dataset.id; });
+       if (!op) return;
+   
+       messages.innerHTML += `
+         <div class="chat-msg user">${op.pregunta}</div>
+         <div class="chat-msg">
+           ${op.respuesta}
+           <br><a href="${op.accionDestino}" target="_blank" rel="noopener" style="color:#0d9488; font-weight:700;">${op.accionTexto} →</a>
+         </div>
+       `;
+       messages.scrollTop = messages.scrollHeight;
+     });
+   }
 
 /* =========================================================
-   1. INICIALIZACIÓN Y CARGA DE DATOS
+   MEJORAS DE INTERACCIÓN (scroll, barra de progreso, volver arriba)
    ========================================================= */
-document.addEventListener('DOMContentLoaded', async function() {
-  await cargarDatos();
-  inicializarMenuMovil();
-  inicializarBarraProgresoScroll();
-  inicializarHuellasFlotantes();
-  inicializarAnimacionesScroll();
-  inicializarPerritoCaminante();
-  actualizarEstadisticasPortada();
-  renderizarDestacadosPortada();
-  inicializarCasosPage();
-  inicializarDirectorioPage();
-  inicializarFormularioPublicar();
-  inicializarFormularioContacto();
-  inicializarVisorJSON();
-  inicializarChatbot();
-});
+(function () {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-async function cargarDatos() {
-  const guardadoLocal = localStorage.getItem(STORAGE_KEY);
-  if (guardadoLocal) {
-    try {
-      appData = JSON.parse(guardadoLocal);
-      reportesData = appData.reportes || [];
-      return;
-    } catch (e) {
-      localStorage.removeItem(STORAGE_KEY);
-    }
+  // Barra de progreso + botón "subir" + navbar con sombra
+  const bar = document.createElement('div');
+  bar.className = 'scroll-progress';
+  const up = document.createElement('button');
+  up.className = 'back-to-top';
+  up.setAttribute('aria-label', 'Volver arriba');
+  up.textContent = '↑';
+  up.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  document.body.append(bar, up);
+
+  const navbar = document.querySelector('.navbar');
+  function onScroll() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    up.classList.toggle('visible', window.scrollY > 500);
+    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 10);
   }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-  try {
-    const respuesta = await fetch('datos.json');
-    if (!respuesta.ok) throw new Error('No se pudo leer datos.json');
-    appData = await respuesta.json();
-  } catch (error) {
-    appData = JSON.parse(JSON.stringify(DATOS_RESPALDO));
-  }
-
-  reportesData = appData.reportes || [];
-  guardarColeccionEnLocal();
-}
-
-function guardarColeccionEnLocal() {
-  if (!appData) return;
-  appData.reportes = reportesData;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-}
-
-/* =========================================================
-   2. HUELLAS EN TODAS LAS PÁGINAS + BARRA SCROLL + PERRITO
-   ========================================================= */
-function inicializarHuellasFlotantes() {
-  const bloques = document.querySelectorAll('.hero, .page-banner, .section, .footer');
-  if (!bloques.length) return;
-
-  const posicionesBase = [
-    { top: 10, left: 6, size: 1.5, rot: -18, dur: 8.5, delay: 0 },
-    { top: 24, left: 22, size: 1.2, rot: 14, dur: 10, delay: 1.2 },
-    { top: 68, left: 11, size: 1.7, rot: -10, dur: 9.2, delay: 0.6 },
-    { top: 82, left: 34, size: 1.3, rot: 22, dur: 11, delay: 2.1 },
-    { top: 15, left: 48, size: 1.4, rot: -25, dur: 9.5, delay: 1.5 },
-    { top: 55, left: 58, size: 1.6, rot: 16, dur: 8.8, delay: 0.4 },
-    { top: 18, left: 76, size: 1.3, rot: -14, dur: 10.5, delay: 1.8 },
-    { top: 74, left: 84, size: 1.8, rot: 20, dur: 9.0, delay: 0.9 },
-    { top: 42, left: 92, size: 1.25, rot: -20, dur: 11.2, delay: 2.5 }
-  ];
-
-  bloques.forEach(function(bloque) {
-    bloque.classList.add('has-floating-paws');
-
-    // Si la sección tiene tarjetas de perros/gatos como protagonistas, aplicamos mayor transparencia
-    const esZonaProtagonistaPerros = Boolean(
-      bloque.querySelector('#contenedor-destacados') ||
-      bloque.querySelector('#contenedor-reportes')
-    );
-
-    const capa = document.createElement('div');
-    capa.className = 'paws-layer ' + (esZonaProtagonistaPerros ? 'paws-subtle' : 'paws-normal');
-    capa.setAttribute('aria-hidden', 'true');
-
-    const esHero = bloque.classList.contains('hero');
-
-    posicionesBase.forEach(function(pos, i) {
-      const huella = document.createElement('span');
-      // En portada, las huellas del lado derecho (donde está la foto de mascotas y el perrito) son más transparentes
-      const cercaDelPerroEnHero = esHero && (pos.left > 50 || pos.top > 72);
-      huella.className = 'global-paw' + (cercaDelPerroEnHero ? ' paw-extra-transparent' : '');
-      huella.textContent = i % 4 === 0 ? '🐕' : '🐾';
-      huella.style.top = pos.top + '%';
-      huella.style.left = pos.left + '%';
-      huella.style.fontSize = pos.size + 'rem';
-      huella.style.setProperty('--rot', pos.rot + 'deg');
-      huella.style.setProperty('--dur', pos.dur + 's');
-      huella.style.setProperty('--delay', pos.delay + 's');
-      capa.appendChild(huella);
-    });
-
-    bloque.insertBefore(capa, bloque.firstChild);
-  });
-}
-
-function inicializarBarraProgresoScroll() {
-  const bar = document.getElementById('scroll-progress');
-  if (!bar) return;
-
-  window.addEventListener('scroll', function() {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const porcentaje = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    bar.style.width = porcentaje + '%';
-  });
-}
-
-function inicializarAnimacionesScroll() {
-  const elementos = document.querySelectorAll('.reveal-item');
-  if (!elementos.length || !('IntersectionObserver' in window)) return;
-
-  document.body.classList.add('js-scroll-ready');
-
-  const observador = new IntersectionObserver(function(entries, obs) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        obs.unobserve(entry.target);
-      }
+  // Aparición suave al hacer scroll (incluye tarjetas creadas dinámicamente)
+  const targets = '.cycle-card, .report-card, .section-header, .form-info, .report-form, .refugio-card, .campana-card, .stat-item';
+  if (reduce || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
     });
   }, { threshold: 0.12 });
-
-  elementos.forEach(function(el) {
-    observador.observe(el);
-  });
-}
-
-function inicializarPerritoCaminante() {
-  const container = document.getElementById('walking-dog-container');
-  const sprite = document.getElementById('walking-dog-sprite');
-  const bubble = document.getElementById('walking-dog-bubble');
-  const btnPause = document.getElementById('btn-pause-dog');
-  const player = document.getElementById('lottie-walking-dog');
-
-  if (!container || !sprite) return;
-
-  let posX = 16;
-  let direccion = 1;
-  let pausado = false;
-  let saludoTimeout = null;
-
-  const frases = [
-    '¡Guau! ¿Ayudamos hoy? 🐾',
-    '¡Adopta, no compres! 💚',
-    '¡Hay patitas buscando hogar! 🏡',
-    '¡Gracias por apoyar en SCZ! 🐶'
-  ];
-  let indiceFrase = 0;
-
-  function actualizarOrientacion() {
-    sprite.style.transform = direccion === 1 ? 'scaleX(-1)' : 'scaleX(1)';
-  }
-
-  actualizarOrientacion();
-
-  function animarPaso() {
-    if (!pausado) {
-      const anchoPantalla = window.innerWidth;
-      const anchoPerro = container.offsetWidth || 175;
-      const limiteDerecho = Math.max(40, anchoPantalla - anchoPerro - 85);
-      const limiteIzquierdo = 12;
-      const velocidad = anchoPantalla < 640 ? 1.1 : 1.55;
-
-      posX += velocidad * direccion;
-
-      if (posX >= limiteDerecho) {
-        posX = limiteDerecho;
-        direccion = -1;
-        actualizarOrientacion();
-      } else if (posX <= limiteIzquierdo) {
-        posX = limiteIzquierdo;
-        direccion = 1;
-        actualizarOrientacion();
-      }
-
-      container.style.transform = `translateX(${posX}px)`;
-    }
-
-    requestAnimationFrame(animarPaso);
-  }
-
-  requestAnimationFrame(animarPaso);
-
-  container.addEventListener('click', function(e) {
-    if (e.target === btnPause) return;
-
-    indiceFrase = (indiceFrase + 1) % frases.length;
-    if (bubble) bubble.textContent = frases[indiceFrase];
-
-    container.classList.add('show-bubble');
-    clearTimeout(saludoTimeout);
-    saludoTimeout = setTimeout(function() {
-      container.classList.remove('show-bubble');
-    }, 2600);
-  });
-
-  if (btnPause) {
-    btnPause.addEventListener('click', function(e) {
-      e.stopPropagation();
-      pausado = !pausado;
-      container.classList.toggle('is-paused', pausado);
-      btnPause.textContent = pausado ? '▶' : '⏸';
-      if (player) {
-        if (pausado && typeof player.pause === 'function') player.pause();
-        if (!pausado && typeof player.play === 'function') player.play();
-      }
+  function watch(root) {
+    root.querySelectorAll(targets).forEach(function (el) {
+      if (!el.classList.contains('reveal')) { el.classList.add('reveal'); io.observe(el); }
     });
   }
-}
+  watch(document);
+  new MutationObserver(function () { watch(document); })
+    .observe(document.body, { childList: true, subtree: true });
+})();
 
-function animarContador(elemento, valorFinal) {
-  if (!elemento) return;
-  let actual = 0;
-  const duracion = 850;
-  const pasos = 24;
-  const incremento = Math.max(1, Math.ceil(valorFinal / pasos));
-  const intervalo = Math.floor(duracion / pasos);
 
-  const timer = setInterval(function() {
-    actual += incremento;
-    if (actual >= valorFinal) {
-      elemento.textContent = valorFinal;
-      clearInterval(timer);
-    } else {
-      elemento.textContent = actual;
-    }
-  }, intervalo);
-}
+/* =========================================================
+   ANIMACIONES LOTTIE, SPLASH, CONTADORES Y EFECTO 3D
+   ========================================================= */
+(function () {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const RUTAS = {
+    hero: 'animaciones/perro-feliz.json',
+    walker: 'animaciones/perro-caminando.json',
+    huellas: 'animaciones/huellas.json',
+    pet: 'animaciones/huellas-mascota.json'
+  };
 
-function lanzarConfetiCelebracion() {
-  if (typeof confetti === 'function') {
-    confetti({
-      particleCount: 75,
-      spread: 65,
-      origin: { y: 0.65 },
-      colors: ['#0d9488', '#f59e0b', '#10b981', '#ffffff']
+  function cargar(el, clave) {
+    if (!el || !window.lottie) return;
+    const anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop: true, autoplay: !reduce, path: RUTAS[clave] });
+    anim.addEventListener('DOMLoaded', function () {
+      const f = el.querySelector('.lottie-fallback');
+      if (f) f.remove();
     });
   }
-}
 
-/* =========================================================
-   3. NAVEGACIÓN MÓVIL
-   ========================================================= */
-function inicializarMenuMovil() {
-  const toggle = document.getElementById('nav-toggle');
-  const menu = document.getElementById('nav-menu');
-  if (!toggle || !menu) return;
+  cargar(document.getElementById('lottie-walker'), 'walker');
+  document.querySelectorAll('[data-lottie]').forEach(function (el) { cargar(el, el.dataset.lottie); });
 
-  toggle.addEventListener('click', function() {
-    menu.classList.toggle('open');
-  });
-}
-
-/* =========================================================
-   4. PORTADA: ESTADÍSTICAS Y CASOS DESTACADOS
-   ========================================================= */
-function actualizarEstadisticasPortada() {
-  const totalEl = document.getElementById('stat-total');
-  const urgentesEl = document.getElementById('stat-urgentes');
-  const resueltosEl = document.getElementById('stat-resueltos');
-
-  if (!totalEl) return;
-
-  const aprobados = reportesData.filter(function(r) { return r.aprobado !== false; });
-  const total = aprobados.length;
-  const resueltos = aprobados.filter(function(r) { return esCasoFinalizado(r.estado); }).length;
-  const activos = total - resueltos;
-
-  animarContador(totalEl, total);
-  animarContador(urgentesEl, activos);
-  animarContador(resueltosEl, resueltos);
-}
-
-function renderizarDestacadosPortada() {
-  const contenedor = document.getElementById('contenedor-destacados');
-  if (!contenedor) return;
-
-  const aprobados = reportesData.filter(function(r) { return r.aprobado !== false; });
-  const destacados = aprobados.slice(0, 3);
-
-  contenedor.innerHTML = destacados
-    .map(function(item, index) {
-      const finalizado = esCasoFinalizado(item.estado);
-      return `
-      <article class="report-card" style="animation-delay: ${index * 0.1}s">
-        <div class="card-img-box">
-          <img src="${item.imagen}" alt="${item.titulo}" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';">
-          <span class="badge-urgencia urg-${item.urgencia}">${item.urgencia}</span>
-        </div>
-        <div class="card-body">
-          <div class="card-category-row">
-            <span class="card-category">${item.categoriaLabel}</span>
-            ${item.verificado ? '<span class="verified-seal">✔ Aliado Verificado</span>' : ''}
-          </div>
-          <h3 class="card-title">${item.titulo}</h3>
-          <p class="card-zone">📍 ${item.zona} • <small>${item.fecha}</small></p>
-          <p class="card-desc">${item.descripcion}</p>
-          ${item.notaCierre ? `<div class="card-closing-note">🎉 ${item.notaCierre}</div>` : ''}
-          <div class="card-footer">
-            <span class="status-tag ${finalizado ? 'is-resolved' : ''}">
-              ${finalizado ? '✔' : '🐾'} ${item.estado} • 🤝 ${item.apoyos}
-            </span>
-            <a href="casos.html" target="_blank" rel="noopener" class="btn-detail">Ver en red →</a>
-          </div>
-        </div>
-      </article>
-    `;
-    })
-    .join('');
-}
-
-/* =========================================================
-   5. PÁGINA CASOS Y MASCOTAS (MODERACIÓN + PIN + WHATSAPP + CRUD)
-   ========================================================= */
-function inicializarCasosPage() {
-  const contenedor = document.getElementById('contenedor-reportes');
-  if (!contenedor) return;
-
-  actualizarUIModerador();
-  renderizarCasos();
-
-  const btnMod = document.getElementById('btn-toggle-moderador');
-  const modalMod = document.getElementById('modal-moderador');
-  const formMod = document.getElementById('form-login-moderador');
-
-  btnMod.addEventListener('click', function() {
-    if (esModeradorActivo()) {
-      sessionStorage.removeItem(MOD_SESSION_KEY);
-      actualizarUIModerador();
-      renderizarCasos();
-    } else {
-      document.getElementById('mod-login-error').hidden = true;
-      document.getElementById('input-clave-mod').value = '';
-      modalMod.hidden = false;
+  // Pantalla de bienvenida (solo la primera vez por sesión, en el inicio)
+  try {
+    if (document.getElementById('hero-carousel') && !sessionStorage.getItem('splash-visto') && !reduce) {
+      sessionStorage.setItem('splash-visto', '1');
+      const splash = document.createElement('div');
+      splash.className = 'splash';
+      splash.innerHTML = '<div class="splash-anim" id="lottie-splash"></div><p>Patitas <strong>SCZ</strong></p>';
+      document.body.appendChild(splash);
+      cargar(splash.querySelector('#lottie-splash'), 'huellas');
+      setTimeout(function () { splash.classList.add('out'); }, 1700);
+      setTimeout(function () { splash.remove(); }, 2300);
     }
-  });
+  } catch (e) { /* sessionStorage no disponible */ }
 
-  document.getElementById('modal-mod-close').addEventListener('click', function() {
-    modalMod.hidden = true;
-  });
-
-  formMod.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const clave = document.getElementById('input-clave-mod').value.trim();
-    if (clave === CLAVE_MODERADOR) {
-      sessionStorage.setItem(MOD_SESSION_KEY, 'true');
-      modalMod.hidden = true;
-      actualizarUIModerador();
-      renderizarCasos();
-    } else {
-      document.getElementById('mod-login-error').hidden = false;
-    }
-  });
-
-  document.getElementById('btn-salir-moderador').addEventListener('click', function() {
-    sessionStorage.removeItem(MOD_SESSION_KEY);
-    actualizarUIModerador();
-    renderizarCasos();
-  });
-
-  document.getElementById('filter-buttons').addEventListener('click', function(e) {
-    if (e.target.classList.contains('filter-btn')) {
-      document.querySelectorAll('#filter-buttons .filter-btn').forEach(function(b) {
-        b.classList.remove('active');
+  // Contadores animados de la portada
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      document.querySelectorAll('.stat-item strong').forEach(function (el) {
+        const meta = parseInt(el.textContent, 10);
+        if (isNaN(meta) || reduce) return;
+        const t0 = performance.now();
+        (function paso(t) {
+          const p = Math.min((t - t0) / 1200, 1);
+          el.textContent = Math.round(meta * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(paso);
+        })(t0);
       });
-      e.target.classList.add('active');
-      filtroCategoriaActual = e.target.dataset.categoria;
-      renderizarCasos();
-    }
+    }, 500);
   });
 
-  document.getElementById('buscador-reportes').addEventListener('input', function(e) {
-    textoBusquedaActual = e.target.value.trim().toLowerCase();
-    renderizarCasos();
-  });
-
-  document.getElementById('filtro-urgencia').addEventListener('change', function(e) {
-    filtroUrgenciaActual = e.target.value;
-    renderizarCasos();
-  });
-
-  document.getElementById('ordenar-reportes').addEventListener('change', function(e) {
-    ordenActual = e.target.value;
-    renderizarCasos();
-  });
-
-  contenedor.addEventListener('click', function(e) {
-    const boton = e.target.closest('.btn-detail');
-    if (boton) {
-      abrirModalDetalle(Number(boton.dataset.id));
-    }
-  });
-
-  const modalOverlay = document.getElementById('modal-detalle');
-  document.getElementById('modal-close').addEventListener('click', function() {
-    modalOverlay.hidden = true;
-  });
-
-  modalOverlay.addEventListener('click', function(e) {
-    if (e.target === modalOverlay) modalOverlay.hidden = true;
-  });
-
-  document.getElementById('btn-apoyar-modal').addEventListener('click', function() {
-    const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
-    if (caso) {
-      caso.apoyos += 1;
-      guardarColeccionEnLocal();
-      document.getElementById('modal-apoyos').textContent = caso.apoyos;
-      renderizarCasos();
-    }
-  });
-
-  document.getElementById('btn-aprobar-modal').addEventListener('click', function() {
-    const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
-    if (caso && esModeradorActivo()) {
-      caso.aprobado = true;
-      guardarColeccionEnLocal();
-      actualizarUIModerador();
-      renderizarCasos();
-      abrirModalDetalle(caso.id);
-    }
-  });
-
-  document.getElementById('btn-verificar-modal').addEventListener('click', function() {
-    const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
-    if (caso && esModeradorActivo()) {
-      caso.verificado = !caso.verificado;
-      guardarColeccionEnLocal();
-      renderizarCasos();
-      abrirModalDetalle(caso.id);
-    }
-  });
-
-  document.getElementById('btn-resolver-modal').addEventListener('click', function() {
-    solicitarVerificacionPin('cerrar');
-  });
-
-  document.getElementById('btn-editar-modal').addEventListener('click', function() {
-    solicitarVerificacionPin('editar');
-  });
-
-  document.getElementById('btn-eliminar-modal').addEventListener('click', function() {
-    solicitarVerificacionPin('eliminar');
-  });
-
-  document.getElementById('btn-confirmar-pin').addEventListener('click', function() {
-    const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
-    if (!caso) return;
-
-    const pinIngresado = document.getElementById('input-pin-autor').value.trim();
-    if (pinIngresado === (caso.pin || '1234')) {
-      document.getElementById('modal-pin-box').hidden = true;
-      ejecutarAccionProtegida(accionPendientePin);
-    } else {
-      document.getElementById('pin-error-msg').hidden = false;
-    }
-  });
-
-  document.getElementById('btn-cancelar-pin').addEventListener('click', function() {
-    document.getElementById('modal-pin-box').hidden = true;
-    accionPendientePin = null;
-  });
-
-  document.getElementById('btn-confirmar-cierre').addEventListener('click', function() {
-    const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
-    if (!caso) return;
-
-    const nuevoEstado = ESTADOS_FINALES[caso.categoria] || 'Sanado';
-    const nota = document.getElementById('input-nota-cierre').value.trim();
-
-    caso.estado = nuevoEstado;
-    if (nota) caso.notaCierre = nota;
-
-    guardarColeccionEnLocal();
-    document.getElementById('modal-cierre-box').hidden = true;
-    lanzarConfetiCelebracion();
-    renderizarCasos();
-    abrirModalDetalle(caso.id);
-  });
-
-  document.getElementById('btn-cancelar-cierre').addEventListener('click', function() {
-    document.getElementById('modal-cierre-box').hidden = true;
-  });
-
-  const vistaNormal = document.getElementById('modal-vista-normal');
-  const formEditar = document.getElementById('form-editar-reporte');
-
-  document.getElementById('btn-cancelar-edicion').addEventListener('click', function() {
-    formEditar.hidden = true;
-    vistaNormal.hidden = false;
-  });
-
-  formEditar.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
-    if (!caso) return;
-
-    const etiquetas = {
-      rescate: 'Rescate y Urgencia',
-      adopcion: 'En Adopción',
-      perdidos: 'Mascota Perdida'
-    };
-
-    caso.titulo = document.getElementById('edit-titulo').value.trim();
-    caso.categoria = document.getElementById('edit-categoria').value;
-    caso.categoriaLabel = etiquetas[caso.categoria];
-    caso.urgencia = document.getElementById('edit-urgencia').value;
-    caso.zona = document.getElementById('edit-zona').value.trim();
-    caso.estado = document.getElementById('edit-estado').value;
-    caso.contacto = document.getElementById('edit-contacto').value.trim();
-    caso.descripcion = document.getElementById('edit-descripcion').value.trim();
-
-    if (esModeradorActivo()) {
-      caso.verificado = document.getElementById('edit-verificado').checked;
-    }
-
-    guardarColeccionEnLocal();
-    renderizarCasos();
-    abrirModalDetalle(caso.id);
-  });
-}
-
-function actualizarUIModerador() {
-  const btnMod = document.getElementById('btn-toggle-moderador');
-  const statusBar = document.getElementById('mod-status-bar');
-  if (!btnMod) return;
-
-  const pendientesCount = reportesData.filter(function(r) { return r.aprobado === false; }).length;
-  const badgeHTML = pendientesCount > 0
-    ? `<span class="mod-count">${pendientesCount} pendiente${pendientesCount > 1 ? 's' : ''}</span>`
-    : '';
-
-  if (esModeradorActivo()) {
-    if (statusBar) statusBar.hidden = false;
-    btnMod.innerHTML = `🛡️ Moderador Activo ${badgeHTML}`;
-  } else {
-    if (statusBar) statusBar.hidden = true;
-    btnMod.innerHTML = `🛡️ Modo Moderador ${badgeHTML}`;
-  }
-}
-
-function solicitarVerificacionPin(accion) {
-  accionPendientePin = accion;
-  document.getElementById('modal-cierre-box').hidden = true;
-
-  if (esModeradorActivo()) {
-    ejecutarAccionProtegida(accion);
-    return;
-  }
-
-  document.getElementById('input-pin-autor').value = '';
-  document.getElementById('pin-error-msg').hidden = true;
-  document.getElementById('modal-pin-box').hidden = false;
-  document.getElementById('input-pin-autor').focus();
-}
-
-function ejecutarAccionProtegida(accion) {
-  const caso = reportesData.find(function(r) { return r.id === reporteSeleccionadoId; });
-  if (!caso) return;
-
-  if (accion === 'cerrar') {
-    const estadoObjetivo = ESTADOS_FINALES[caso.categoria] || 'Sanado';
-    document.getElementById('cierre-box-titulo').textContent = `🎉 Marcar caso como "${estadoObjetivo}"`;
-    document.getElementById('input-nota-cierre').value = caso.notaCierre || '';
-    document.getElementById('modal-cierre-box').hidden = false;
-    document.getElementById('input-nota-cierre').focus();
-  } else if (accion === 'editar') {
-    document.getElementById('edit-titulo').value = caso.titulo;
-    document.getElementById('edit-categoria').value = caso.categoria;
-    document.getElementById('edit-urgencia').value = caso.urgencia;
-    document.getElementById('edit-zona').value = caso.zona;
-    document.getElementById('edit-estado').value = caso.estado;
-    document.getElementById('edit-contacto').value = caso.contacto || '';
-    document.getElementById('edit-descripcion').value = caso.descripcion;
-
-    const grupoVerificado = document.getElementById('grupo-edit-verificado');
-    if (grupoVerificado) {
-      grupoVerificado.hidden = !esModeradorActivo();
-      document.getElementById('edit-verificado').checked = Boolean(caso.verificado);
-    }
-
-    document.getElementById('modal-vista-normal').hidden = true;
-    document.getElementById('form-editar-reporte').hidden = false;
-  } else if (accion === 'eliminar') {
-    if (!confirm('¿Estás seguro de eliminar definitivamente esta ficha?')) return;
-    reportesData = reportesData.filter(function(r) { return r.id !== reporteSeleccionadoId; });
-    guardarColeccionEnLocal();
-    document.getElementById('modal-detalle').hidden = true;
-    actualizarUIModerador();
-    renderizarCasos();
-  }
-}
-
-function renderizarCasos() {
-  const contenedor = document.getElementById('contenedor-reportes');
-  if (!contenedor) return;
-
-  const modActivo = esModeradorActivo();
-
-  const filtrados = reportesData.filter(function(item) {
-    if (!modActivo && item.aprobado === false) return false;
-
-    const okCat = filtroCategoriaActual === 'todos' || item.categoria === filtroCategoriaActual;
-    const okUrg = filtroUrgenciaActual === 'todas' || item.urgencia === filtroUrgenciaActual;
-    const okTxt =
-      item.titulo.toLowerCase().includes(textoBusquedaActual) ||
-      item.zona.toLowerCase().includes(textoBusquedaActual) ||
-      item.descripcion.toLowerCase().includes(textoBusquedaActual);
-    return okCat && okUrg && okTxt;
-  });
-
-  const pesos = { critica: 3, alta: 2, moderada: 1 };
-  const ordenados = filtrados.slice().sort(function(a, b) {
-    if (modActivo && a.aprobado !== b.aprobado) {
-      return a.aprobado === false ? -1 : 1;
-    }
-    if (ordenActual === 'importancia') return (pesos[b.urgencia] || 0) - (pesos[a.urgencia] || 0);
-    if (ordenActual === 'alfabetico') return a.titulo.localeCompare(b.titulo, 'es', { sensitivity: 'base' });
-    if (ordenActual === 'apoyos') return b.apoyos - a.apoyos;
-    return 0;
-  });
-
-  if (ordenados.length === 0) {
-    contenedor.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#64748b; padding:2rem;">No se encontraron casos con esos filtros.</p>`;
-    return;
-  }
-
-  contenedor.innerHTML = ordenados
-    .map(function(item, index) {
-      const finalizado = esCasoFinalizado(item.estado);
-      const pendiente = item.aprobado === false;
-
-      return `
-      <article class="report-card ${pendiente ? 'is-pending-card' : ''}" style="animation-delay: ${index * 0.07}s">
-        <div class="card-img-box">
-          <img src="${item.imagen}" alt="${item.titulo}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';">
-          ${pendiente ? '<span class="badge-pending-overlay">⏳ Pendiente de revisión</span>' : ''}
-          <span class="badge-urgencia urg-${item.urgencia}">${item.urgencia}</span>
-        </div>
-        <div class="card-body">
-          <div class="card-category-row">
-            <span class="card-category">${item.categoriaLabel}</span>
-            ${item.verificado ? '<span class="verified-seal">✔ Aliado Verificado</span>' : ''}
-          </div>
-          <h3 class="card-title">${item.titulo}</h3>
-          <p class="card-zone">📍 ${item.zona} • <small>${item.fecha}</small></p>
-          <p class="card-desc">${item.descripcion}</p>
-          ${item.notaCierre ? `<div class="card-closing-note">🎉 ${item.notaCierre}</div>` : ''}
-          <div class="card-footer">
-            <span class="status-tag ${finalizado ? 'is-resolved' : ''}">
-              ${finalizado ? '✔' : '🐾'} ${item.estado} • 🤝 ${item.apoyos}
-            </span>
-            <button type="button" class="btn-detail" data-id="${item.id}">Ver ficha →</button>
-          </div>
-        </div>
-      </article>
-    `;
-    })
-    .join('');
-}
-
-function abrirModalDetalle(id) {
-  const caso = reportesData.find(function(r) { return r.id === id; });
-  if (!caso) return;
-
-  reporteSeleccionadoId = id;
-  document.getElementById('modal-vista-normal').hidden = false;
-  document.getElementById('form-editar-reporte').hidden = true;
-  document.getElementById('modal-pin-box').hidden = true;
-  document.getElementById('modal-cierre-box').hidden = true;
-
-  const modalImg = document.getElementById('modal-img');
-  modalImg.onerror = function() {
-    modalImg.onerror = null;
-    modalImg.src = FALLBACK_SVG;
-  };
-  modalImg.src = caso.imagen;
-
-  document.getElementById('modal-categoria').textContent = caso.categoriaLabel;
-  document.getElementById('modal-urgencia').textContent = `Urgencia ${caso.urgencia}`;
-  document.getElementById('modal-estado-badge').textContent = caso.aprobado === false ? '⏳ Pendiente de aprobación' : `Estado: ${caso.estado}`;
-
-  const verificadoBadge = document.getElementById('modal-verificado-badge');
-  if (verificadoBadge) {
-    verificadoBadge.hidden = !caso.verificado;
-  }
-
-  document.getElementById('modal-titulo').textContent = caso.titulo;
-  document.getElementById('modal-zona').textContent = caso.zona;
-  document.getElementById('modal-fecha').textContent = caso.fecha;
-  document.getElementById('modal-contacto').textContent = caso.contacto || 'Coordinación vía Patitas SCZ';
-  document.getElementById('modal-descripcion').textContent = caso.descripcion;
-  document.getElementById('modal-apoyos').textContent = caso.apoyos;
-
-  const notaBox = document.getElementById('modal-nota-cierre-box');
-  if (caso.notaCierre) {
-    notaBox.textContent = `🎉 Final Feliz: ${caso.notaCierre}`;
-    notaBox.hidden = false;
-  } else {
-    notaBox.hidden = true;
-  }
-
-  const soloDigitos = (caso.contacto || '').replace(/\D/g, '');
-  const telefonoWA = soloDigitos.length === 8 ? `591${soloDigitos}` : (soloDigitos || '59170000000');
-  const mensajeWA = encodeURIComponent(`Hola, vi el caso "${caso.titulo}" en Patitas SCZ y me gustaría ayudar.`);
-  document.getElementById('btn-whatsapp-modal').href = `https://wa.me/${telefonoWA}?text=${mensajeWA}`;
-
-  const modActivo = esModeradorActivo();
-
-  const btnAprobar = document.getElementById('btn-aprobar-modal');
-  btnAprobar.hidden = !(modActivo && caso.aprobado === false);
-
-  const btnVerificar = document.getElementById('btn-verificar-modal');
-  if (btnVerificar) {
-    btnVerificar.hidden = !modActivo;
-    btnVerificar.textContent = caso.verificado ? '✖ Quitar Verificado' : '✔ Dar Check Verificado';
-  }
-
-  const btnResolver = document.getElementById('btn-resolver-modal');
-  const estadoObjetivo = ESTADOS_FINALES[caso.categoria] || 'Sanado';
-
-  if (esCasoFinalizado(caso.estado)) {
-    btnResolver.textContent = `✅ Caso ${caso.estado}`;
-    btnResolver.disabled = true;
-  } else {
-    btnResolver.textContent = `✔ Marcar como ${estadoObjetivo}`;
-    btnResolver.disabled = false;
-  }
-
-  document.getElementById('modal-detalle').hidden = false;
-}
-
-/* =========================================================
-   6. DIRECTORIO DE REFUGIOS Y CAMPAÑAS (refugios.html)
-   ========================================================= */
-function inicializarDirectorioPage() {
-  const contenedor = document.getElementById('contenedor-guias');
-  if (!contenedor || !appData) return;
-
-  const renderGuias = function(tipo) {
-    const tipoFiltro = tipo || 'todos';
-    const lista = tipoFiltro === 'todos' ? appData.guias : appData.guias.filter(function(g) { return g.tipo === tipoFiltro; });
-    contenedor.innerHTML = lista
-      .map(function(g) {
-        return `
-        <article class="guide-card">
-          <div class="guide-top-badges">
-            <span class="guide-badge">${g.badge}</span>
-            ${g.verificado ? '<span class="verified-seal">✔ Aliado Verificado</span>' : ''}
-          </div>
-          <h3>${g.titulo}</h3>
-          <p class="guide-meta">📍 <strong>Ubicación:</strong> ${g.lugar}</p>
-          <p class="guide-meta">🕒 <strong>Horario:</strong> ${g.horario}</p>
-          <p class="guide-detail">${g.detalle}</p>
-        </article>
-      `;
-      })
-      .join('');
-  };
-
-  renderGuias('todos');
-
-  const btns = document.getElementById('guias-filter-buttons');
-  if (btns) {
-    btns.addEventListener('click', function(e) {
-      if (e.target.classList.contains('filter-btn')) {
-        document.querySelectorAll('#guias-filter-buttons .filter-btn').forEach(function(b) {
-          b.classList.remove('active');
-        });
-        e.target.classList.add('active');
-        renderGuias(e.target.dataset.tipo);
-      }
+  // Efecto 3D en las tarjetas al mover el mouse
+  if (!reduce && window.matchMedia('(hover: hover)').matches) {
+    document.addEventListener('mousemove', function (e) {
+      const card = e.target.closest && e.target.closest('.report-card');
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = 'perspective(900px) rotateX(' + (-y * 7) + 'deg) rotateY(' + (x * 9) + 'deg) translateY(-6px)';
+    });
+    document.addEventListener('mouseout', function (e) {
+      const card = e.target.closest && e.target.closest('.report-card');
+      if (card && !card.contains(e.relatedTarget)) card.style.transform = '';
     });
   }
-}
+})();
+
 
 /* =========================================================
-   7. FORMULARIO PUBLICAR CASO CON PIN DE AUTOR (publicar.html)
+   FONDO ANIMADO, PERRITO INTERACTIVO Y CARRUSEL
    ========================================================= */
-function inicializarFormularioPublicar() {
-  const form = document.getElementById('form-reporte');
-  if (!form) return;
+(function () {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const inputFoto = document.getElementById('rep-foto');
-  const previewBox = document.getElementById('preview-container');
-  const previewImg = document.getElementById('preview-img');
-  let imagenBase64 = '';
+  // Fondo con huellas y mascotas flotando en TODAS las páginas
+  const bg = document.createElement('div');
+  bg.className = 'bg-paws';
+  bg.setAttribute('aria-hidden', 'true');
+  const em = ['🐾', '🐕', '🐈', '🐾', '🦴', '🐶', '🐱', '🐾', '🐩', '💚'];
+  for (let k = 0; k < 20; k++) {
+    const s = document.createElement('span');
+    s.textContent = em[k % em.length];
+    s.style.cssText = 'left:' + (Math.random() * 96) + '%;top:' + (Math.random() * 92) + '%;font-size:' + (1.4 + Math.random() * 2.2) + 'rem;animation-duration:' + (9 + Math.random() * 10) + 's;animation-delay:-' + (Math.random() * 10) + 's;--r:' + ((Math.random() * 60 - 30) | 0) + 'deg';
+    bg.appendChild(s);
+  }
+  document.body.prepend(bg);
 
-  inputFoto.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) {
-      imagenBase64 = '';
-      previewBox.hidden = true;
-      return;
+  // Perrito fijo en la parte baja: al hacer clic habla y anima a ayudar
+  const dog = document.querySelector('.dog-walker');
+  if (dog) {
+    const frases = [
+      '¡Guau! Gracias por visitar Patitas SCZ 🐾',
+      'Un compartido tuyo puede salvar una vida 💚',
+      '¿Puedes ser hogar temporal? ¡Ayuda muchísimo!',
+      'Adopta, no compres: ¡un amigo te espera! 🐶',
+      'Tu apoyo hace mover muchas colitas 🐕',
+      'Esterilizar también es un acto de amor 🩺',
+      'Gracias por no mirar hacia otro lado 💛',
+      '¿Ya difundiste un caso hoy? ¡Cada compartido suma!'
+    ];
+    const bubble = document.createElement('div');
+    bubble.className = 'dog-bubble';
+    bubble.hidden = true;
+    dog.appendChild(bubble);
+    let idx = (Math.random() * frases.length) | 0, timer;
+
+    function corazones() {
+      for (let k = 0; k < 6; k++) {
+        const h = document.createElement('span');
+        h.className = 'heart';
+        h.textContent = k % 2 ? '💚' : '🐾';
+        h.style.left = (10 + Math.random() * 80) + '%';
+        h.style.animationDelay = (k * 0.08) + 's';
+        h.addEventListener('animationend', function () { h.remove(); });
+        dog.appendChild(h);
+      }
     }
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      imagenBase64 = ev.target.result;
-      previewImg.src = imagenBase64;
-      previewBox.hidden = false;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const titulo = document.getElementById('rep-titulo').value.trim();
-    const categoria = document.getElementById('rep-categoria').value;
-    const urgencia = document.getElementById('rep-urgencia').value;
-    const zona = document.getElementById('rep-zona').value.trim();
-    const contacto = document.getElementById('rep-contacto').value.trim();
-    const pin = document.getElementById('rep-pin').value.trim();
-    const descripcion = document.getElementById('rep-descripcion').value.trim();
-    const errorEl = document.getElementById('rep-error');
-    const exitoEl = document.getElementById('rep-exito');
-
-    const pinValido = /^\d{4}$/.test(pin);
-
-    if (!titulo || !categoria || !zona || !contacto || !pinValido || !descripcion) {
-      exitoEl.hidden = true;
-      errorEl.hidden = false;
-      return;
+    function hablar() {
+      const anim = window.lottie && lottie.getRegisteredAnimations().find(function (x) { return x.wrapper && x.wrapper.id === 'lottie-walker'; });
+      bubble.classList.toggle('left', dog.getBoundingClientRect().right > window.innerWidth - 240);
+      bubble.textContent = frases[idx++ % frases.length];
+      bubble.hidden = false;
+      dog.classList.add('parado', 'saltando');
+      if (anim) anim.setSpeed(2.2);
+      corazones();
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        bubble.hidden = true;
+        dog.classList.remove('parado', 'saltando');
+        if (anim) anim.setSpeed(1);
+      }, 3800);
     }
+    dog.addEventListener('click', hablar);
+    setTimeout(function () {
+      hablar();
+      setInterval(function () { if (document.visibilityState === 'visible') hablar(); }, 40000);
+    }, 12000);
+  }
 
-    errorEl.hidden = true;
-
-    const etiquetas = {
-      rescate: 'Rescate y Urgencia',
-      adopcion: 'En Adopción',
-      perdidos: 'Mascota Perdida'
-    };
-
-    const estadosIniciales = {
-      rescate: 'En atención',
-      adopcion: 'Buscando hogar',
-      perdidos: 'Se busca'
-    };
-
-    const nuevoCaso = {
-      id: Date.now(),
-      titulo: titulo,
-      categoria: categoria,
-      categoriaLabel: etiquetas[categoria],
-      zona: zona,
-      contacto: contacto,
-      pin: pin,
-      verificado: false,
-      aprobado: false,
-      urgencia: urgencia,
-      estado: estadosIniciales[categoria],
-      notaCierre: '',
-      fecha: 'Hace un momento',
-      descripcion: descripcion,
-      imagen: imagenBase64 || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80',
-      apoyos: 1
-    };
-
-    reportesData.unshift(nuevoCaso);
-    guardarColeccionEnLocal();
-
-    exitoEl.textContent = `✅ ¡Caso enviado a revisión! Activa el Modo Moderador (clave 2026) en "Casos y Mascotas" para aprobarlo. Tu PIN de autor es ${pin}.`;
-    exitoEl.hidden = false;
-    form.reset();
-    previewBox.hidden = true;
-
-    setTimeout(function() {
-      window.location.href = 'casos.html';
-    }, 2200);
-  });
-}
-
-/* =========================================================
-   8. FORMULARIO DE CONTACTO / ALIANZAS (index.html)
-   ========================================================= */
-function inicializarFormularioContacto() {
-  const formContacto = document.getElementById('form-contacto');
-  if (!formContacto) return;
-
-  formContacto.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const nombre = document.getElementById('contacto-nombre').value.trim();
-    const contactoDato = document.getElementById('contacto-email').value.trim();
-    const asunto = document.getElementById('contacto-asunto').value;
-    const mensaje = document.getElementById('contacto-mensaje').value.trim();
-    const errorEl = document.getElementById('contacto-error');
-    const exitoEl = document.getElementById('contacto-exito');
-
-    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactoDato);
-    const soloNumeros = contactoDato.replace(/[\s\-\+\(\)]/g, '');
-    const telefonoValido = /^\d{7,15}$/.test(soloNumeros);
-
-    if (!nombre || (!emailValido && !telefonoValido) || !asunto || !mensaje) {
-      exitoEl.hidden = true;
-      errorEl.hidden = false;
-      return;
+  // Carrusel de la portada
+  const c = document.getElementById('hero-carousel');
+  if (c) {
+    const slides = Array.from(c.querySelectorAll('.slide'));
+    const dots = c.querySelector('.carousel-dots');
+    let i = 0, timer, x0 = null;
+    function go(n) {
+      i = (n + slides.length) % slides.length;
+      slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+      Array.from(dots.children).forEach(function (d, k) { d.classList.toggle('active', k === i); });
     }
-
-    errorEl.hidden = true;
-    exitoEl.textContent = `✅ ¡Gracias, ${nombre}! Recibimos tu solicitud para la red Patitas SCZ. Te contactaremos pronto a ${contactoDato}.`;
-    exitoEl.hidden = false;
-    formContacto.reset();
-  });
-}
-
-/* =========================================================
-   9. VISOR JSON EN VIVO Y CHATBOT ASISTENTE
-   ========================================================= */
-function inicializarVisorJSON() {
-  const btnVer = document.getElementById('btn-ver-json');
-  const modalJson = document.getElementById('modal-json');
-  const btnCerrar = document.getElementById('modal-json-close');
-  const btnReset = document.getElementById('btn-reset-json');
-  const viewer = document.getElementById('json-viewer-content');
-
-  if (!btnVer || !modalJson) return;
-
-  btnVer.addEventListener('click', function() {
-    viewer.textContent = JSON.stringify(appData, null, 2);
-    modalJson.hidden = false;
-  });
-
-  btnCerrar.addEventListener('click', function() {
-    modalJson.hidden = true;
-  });
-
-  btnReset.addEventListener('click', function() {
-    localStorage.removeItem(STORAGE_KEY);
-    sessionStorage.removeItem(MOD_SESSION_KEY);
-    location.reload();
-  });
-}
-
-function inicializarChatbot() {
-  const toggle = document.getElementById('chatbot-toggle');
-  const win = document.getElementById('chatbot-window');
-  const closeBtn = document.getElementById('chatbot-close');
-  const messages = document.getElementById('chatbot-messages');
-  const options = document.getElementById('chatbot-options');
-
-  if (!toggle || !win || !appData || !appData.chatbot) return;
-
-  toggle.addEventListener('click', function() {
-    win.hidden = !win.hidden;
-  });
-
-  closeBtn.addEventListener('click', function() {
-    win.hidden = true;
-  });
-
-  messages.innerHTML = `<div class="chat-msg">${appData.chatbot.bienvenida}</div>`;
-
-  options.innerHTML = appData.chatbot.opciones
-    .map(function(op) {
-      return `<button type="button" class="chat-opt-btn" data-id="${op.id}">${op.pregunta}</button>`;
-    })
-    .join('');
-
-  options.addEventListener('click', function(e) {
-    if (!e.target.classList.contains('chat-opt-btn')) return;
-    const op = appData.chatbot.opciones.find(function(o) { return o.id === e.target.dataset.id; });
-    if (!op) return;
-
-    messages.innerHTML += `
-      <div class="chat-msg user">${op.pregunta}</div>
-      <div class="chat-msg">
-        ${op.respuesta}
-        <br><a href="${op.accionDestino}" style="color:#0d9488; font-weight:700;">${op.accionTexto} →</a>
-      </div>
-    `;
-    messages.scrollTop = messages.scrollHeight;
-  });
-}
+    function reiniciar() {
+      clearInterval(timer);
+      if (!reduce) timer = setInterval(function () { go(i + 1); }, 4500);
+    }
+    slides.forEach(function (s, n) {
+      const b = document.createElement('button');
+      b.setAttribute('aria-label', 'Ir a la imagen ' + (n + 1));
+      b.addEventListener('click', function () { go(n); reiniciar(); });
+      dots.appendChild(b);
+      const img = s.querySelector('img');
+      img.addEventListener('error', function () { s.classList.add('sin-imagen'); img.remove(); });
+    });
+    c.querySelector('.prev').addEventListener('click', function () { go(i - 1); reiniciar(); });
+    c.querySelector('.next').addEventListener('click', function () { go(i + 1); reiniciar(); });
+    c.addEventListener('mouseenter', function () { clearInterval(timer); });
+    c.addEventListener('mouseleave', reiniciar);
+    c.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    c.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      const d = e.changedTouches[0].clientX - x0;
+      if (Math.abs(d) > 40) { go(i + (d < 0 ? 1 : -1)); reiniciar(); }
+      x0 = null;
+    });
+    go(0);
+    reiniciar();
+  }
+})();
