@@ -1537,3 +1537,111 @@ body {
 .report-card.is-neutral-closed { border: 2px solid #cbd5e1; background: #f8fafc; }
 .report-card.is-neutral-closed .card-img-box img { filter: grayscale(.35); }
 .memorial-ribbon.neutral-ribbon { background: linear-gradient(90deg, #64748b, #94a3b8); }
+/* ==========================================================================
+   REDISEÑO: FORMAS EDITORIALES WIX CON PALETA ORIGINAL (NARANJA COMO ACENTO)
+   ========================================================================== */
+   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&display=swap');
+
+   :root {
+     --wix-primary: #0f766e;       /* Verde Teal oscuro principal */
+     --wix-primary-dark: #115e59;  /* Verde Teal más oscuro al tocar botones */
+     --wix-orange: #ea580c;        /* Naranja vibrante SOLO para acentos */
+     --wix-border-light: #e2e8f0;  /* Gris muy suave para bordes en reposo */
+     --font-display: 'Fraunces', Georgia, serif;
+   }
+   
+   /* 1. Menú de Navegación */
+   .navbar { background-color: rgba(255, 255, 255, 0.98) !important; }
+   .navbar .nav-link, .navbar .brand-text { color: var(--wix-primary) !important; font-weight: 700 !important; }
+   .navbar .nav-link:hover, .navbar .nav-link.active { color: var(--wix-orange) !important; } /* Detalle naranja al pasar el mouse */
+   
+   /* 2. Tipografía Editorial (Comportamiento base de los Títulos) */
+   h1, h2, h3, .hero-title, .section-title {
+     font-family: var(--font-display) !important;
+     font-weight: 700 !important;
+     letter-spacing: -0.02em;
+     transition: transform 0.4s ease-out, opacity 0.4s ease-out !important;
+   }
+   
+   /* COLOR BLANCO BRILLANTE: Solo para los banners oscuros de las páginas internas */
+   .page-banner h1 {
+     color: #ffffff !important;
+     text-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+   }
+   
+   /* COLOR VERDE OSCURO: Para el título de Inicio y todos los demás subtítulos */
+   .hero-content h1, .section h2, .form-info h2, .report-form h3, .cards-grid h3 {
+     color: var(--wix-primary) !important;
+   }
+   
+   /* 3. Tarjetas: Borde sutil y neutro, que se enciende de naranja solo al tocarlas */
+   .cards-grid > *, .card, .case-card, .shelter-card {
+     background: #ffffff !important;
+     border-radius: 32px !important;
+     border: 2px solid var(--wix-border-light) !important; /* Borde delgado y limpio */
+     box-shadow: 0 16px 32px rgba(15, 118, 110, 0.05) !important;
+     overflow: hidden;
+     transition: transform 0.5s ease-out, opacity 0.5s ease-out, border-color 0.3s ease, box-shadow 0.3s ease !important;
+   }
+   .cards-grid > *:hover {
+     border-color: var(--wix-orange) !important; /* Magia: el naranja aparece aquí */
+     box-shadow: 0 16px 32px rgba(234, 88, 12, 0.12) !important;
+   }
+   
+   /* 4. Ticker (Cinta): Regresa al Verde Elegante */
+   .ticker {
+     background: var(--wix-primary) !important;
+     color: #fff !important;
+     border-radius: 999px !important;
+     margin: 1.5rem auto 3rem !important;
+     max-width: 95% !important;
+     transform: rotate(-1deg) !important;
+     box-shadow: 0 12px 24px rgba(15, 118, 110, 0.25) !important;
+     padding: 1rem 0 !important;
+   }
+   .ticker-track {
+     font-family: var(--font-display) !important;
+     font-size: 1.3rem !important;
+     font-weight: 700 !important;
+     letter-spacing: 0.03em !important;
+   }
+   .wix-pill-track .heart {
+     color: var(--wix-orange) !important; /* Corazones naranjas en la cinta */
+   }
+   
+   /* 5. Botones tipo píldora: Sobrios, con naranja secundario */
+   .btn-primary, .btn-secondary, .btn-whatsapp {
+     border-radius: 99px !important;
+     text-transform: uppercase !important;
+     font-weight: 800 !important;
+     letter-spacing: 0.05em !important;
+     box-shadow: none !important;
+     transition: transform 0.2s ease, background-color 0.2s ease !important;
+   }
+   .btn-primary { 
+     background-color: var(--wix-primary) !important; 
+     color: #ffffff !important; 
+     border: none !important; 
+   }
+   .btn-primary:hover { 
+     background-color: var(--wix-primary-dark) !important; 
+     transform: translateY(-2px); 
+   }
+   .btn-secondary { 
+     background-color: #fff7ed !important; 
+     color: var(--wix-orange) !important; 
+     border: 1px solid var(--wix-orange) !important; 
+   }
+   .btn-secondary:hover { 
+     background-color: var(--wix-orange) !important; 
+     color: #ffffff !important; 
+   }
+   
+   /* 6. Animación segura del título inicial */
+   .wix-title-enter {
+     animation: wixTitleReveal 1.2s ease-out forwards;
+   }
+   @keyframes wixTitleReveal {
+     0% { opacity: 0; transform: translateY(15px); }
+     100% { opacity: 1; transform: translateY(0); }
+   }

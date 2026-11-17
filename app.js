@@ -1259,3 +1259,70 @@
     reiniciar();
   }
 })();
+/* ==========================================================================
+   MOTOR DE ANIMACIONES DE SCROLL (ESTILO WIX - CORREGIDO Y SEGURO)
+   ========================================================================== */
+   (function initWixEffectsSafe() {
+    // 1. Aparición del título principal
+    const mainTitles = document.querySelectorAll('h1, .hero-title');
+    mainTitles.forEach(title => title.classList.add('wix-title-enter'));
+  
+    // 2. Efectos de Scroll simplificados y seguros
+    function updateScrollSafe() {
+      const vh = window.innerHeight;
+      const isMobile = window.innerWidth <= 768;
+  
+      // A) Títulos que crecen (ahora arrancan en 85% para no verse extraños al cargar)
+      document.querySelectorAll('h2, .section-title').forEach(h2 => {
+        const rect = h2.getBoundingClientRect();
+        const progress = Math.max(0, Math.min(1, (vh * 1.0 - rect.top) / (vh * 0.5)));
+        
+        h2.style.transform = `scale(${0.85 + progress * 0.15})`; 
+        h2.style.opacity = (0.2 + progress * 0.8).toFixed(2);
+        h2.style.transformOrigin = 'center center';
+      });
+  
+      // B) Tarjetas con efecto de profundidad (acercándose desde 55%)
+      document.querySelectorAll('.cards-grid').forEach(grid => {
+        const cards = Array.from(grid.children);
+        cards.forEach((card, index) => {
+          const rect = card.getBoundingClientRect();
+          const progress = Math.max(0, Math.min(1, (vh * 1.15 - rect.top) / (vh * 0.7)));
+          const inv = 1 - progress; 
+  
+          const col = index % 3;
+          const spreadX = isMobile ? 35 : 110; 
+          let offsetX = 0;
+          let rotate = 0;
+  
+          if (col === 0) {
+            offsetX = -spreadX * inv; 
+            rotate = -8 * inv; 
+          } else if (col === 2) {
+            offsetX = spreadX * inv; 
+            rotate = 8 * inv;
+          }
+          
+          const scale = 0.55 + progress * 0.45;
+          
+          card.style.transform = `translate3d(${offsetX.toFixed(1)}px, 0px, 0) rotate(${rotate.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+          card.style.opacity = progress.toFixed(2);
+        });
+      });
+    }
+  
+    // Escuchador de Scroll optimizado
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateScrollSafe();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  
+    setTimeout(updateScrollSafe, 150);
+    setTimeout(updateScrollSafe, 600); 
+  })();
